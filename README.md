@@ -1,7 +1,7 @@
 Local warning
 
 Set your name in the first blank space.
-then, Use the mouse to set the arena (think of it as mouse drag)
+then, Use the mouse to set the arena (think like it as mouse drag)
 - if you using "Set Mouse Position" Button, it's so easy
 
 WARNINGS
