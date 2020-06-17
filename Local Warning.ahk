@@ -202,7 +202,7 @@ start:
 		;
 		
 		pToken := Gdip_Startup() ;Gdip 시작
-		pScreen := Gdip_BitmapFromHwnd(WinExist(eve name)) ; 화면 캡쳐
+		pScreen := Gdip_BitmapFromHwnd(WinExist(eve,name)) ; 화면 캡쳐
 
 		; 화면과 매치 시킬 이미지 데이터 입력 
 		pAlliance := Gdip_CreateBitmapFromFile("image/Friendly/Alliance.gif")
