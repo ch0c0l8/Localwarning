@@ -8,8 +8,6 @@ then, Use the mouse to set the arena (think like mouse drag)
 - The coordinates are based on the Eve online screen (Relative coordinates)
 
 ## 2020/06/20
-Add
- - Add Hostile NPC Icons
-Bugfixes
- - Kept ringing if the "eve online" handle was not detected
- - The bug where the program started, even if none of the check boxes were checked.
+- Add : Hostile NPC Icons
+- Bugfix : Kept ringing if the "eve online" handle was not detected
+- Bugfix : The bug where the program started, even if none of the check boxes were checked.
