@@ -1,7 +1,5 @@
 ﻿#Include Gdip_All.ahk
 #Include Gdip_ImageSearch.ahk
-; 정의
-eve := "EVE - "
 
 ; ini 불러오기
 IniRead, name, data.ini, Name, name
@@ -142,14 +140,14 @@ SMP:
 	MouseGetPos, posx1, posy1
 	guicontrol,,FX, %posx1%
 	guicontrol,,FY, %posy1%
-	msgbox, 0, Local Waring, Set next mouse position
+	msgbox, 0, Local Warning, Set next mouse position
 	
 	;두번째 좌표 클릭 설정
 	KeyWait, Lbutton, D
 	MouseGetPos, posx2, posy2
 	guicontrol,,SX, %posx2%
 	guicontrol,,SY, %posy2%
-	msgbox, 0, Local Waring, Setup completed
+	msgbox, 0, Local Warning, Setup completed
 	
 	GuiControl, Enabled, SMP
 }
@@ -202,7 +200,7 @@ start:
 		;
 		
 		pToken := Gdip_Startup() ;Gdip 시작
-		pScreen := Gdip_BitmapFromHwnd(WinExist(eve,name)) ; 화면 캡쳐
+		pScreen := Gdip_BitmapFromHwnd(WinExist("EVE - " . name)) ; 화면 캡쳐
 
 		; 화면과 매치 시킬 이미지 데이터 입력 
 		pAlliance := Gdip_CreateBitmapFromFile("image/Friendly/Alliance.gif")
