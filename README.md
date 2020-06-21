@@ -9,6 +9,7 @@ then, Use the mouse to set the arena (think like mouse drag)
 
 ## 2020/06/21
  - NPC images updated 
+ - Change Image Search Variation Range : 50 -> 25
 
 ## 2020/06/20
 - Add : Hostile NPC Icons
