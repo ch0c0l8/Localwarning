@@ -217,9 +217,8 @@ GuiClose:
 	IniWrite, %Carrier%, data.ini, NPC, Carrier
 	IniWrite, %Supercarrier%, data.ini, NPC, Supercarrier
 	IniWrite, %Titan%, data.ini, NPC, Titan
+	ExitApp
 }
-
-ExitApp
 return
 
 ; 마우스 간편 좌표 설정
@@ -421,86 +420,86 @@ start:
 
 		; Friendly 탭
 		if Alliance
-			vAlliance := Gdip_ImageSearch(pScreen, pAlliance, , FX, FY, SX, SY, 50)
+			vAlliance := Gdip_ImageSearch(pScreen, pAlliance, , FX, FY, SX, SY, 25)
 		if Corporation
-			vCorporation := Gdip_ImageSearch(pScreen, pCorporation, , FX, FY, SX, SY, 50)
+			vCorporation := Gdip_ImageSearch(pScreen, pCorporation, , FX, FY, SX, SY, 25)
 		if ExcellentStanding
-			vExcellentStanding := Gdip_ImageSearch(pScreen, pExcellentStanding, , FX, FY, SX, SY, 50)
+			vExcellentStanding := Gdip_ImageSearch(pScreen, pExcellentStanding, , FX, FY, SX, SY, 25)
 		if Fleet
-			vFleet := Gdip_ImageSearch(pScreen, pFleet, , FX, FY, SX, SY, 50)
+			vFleet := Gdip_ImageSearch(pScreen, pFleet, , FX, FY, SX, SY, 25)
 		if GoodStanding
-			vGoodStanding := Gdip_ImageSearch(pScreen, pGoodStanding, , FX, FY, SX, SY, 50)
+			vGoodStanding := Gdip_ImageSearch(pScreen, pGoodStanding, , FX, FY, SX, SY, 25)
 		if MilitiaAlly
-			vMilitiaAlly := Gdip_ImageSearch(pScreen, pMilitiaAlly, , FX, FY, SX, SY, 50)
+			vMilitiaAlly := Gdip_ImageSearch(pScreen, pMilitiaAlly, , FX, FY, SX, SY, 25)
 		; Hostlie 탭 
 		if AvailableKillRight
-			vAvailableKillRight := Gdip_ImageSearch(pScreen, pAvailableKillRight, , FX, FY, SX, SY, 50)
+			vAvailableKillRight := Gdip_ImageSearch(pScreen, pAvailableKillRight, , FX, FY, SX, SY, 25)
 		if BadStanding
-			vBadStanding := Gdip_ImageSearch(pScreen, pBadStanding, , FX, FY, SX, SY, 50)
+			vBadStanding := Gdip_ImageSearch(pScreen, pBadStanding, , FX, FY, SX, SY, 25)
 		if Bounty
-			vBounty := Gdip_ImageSearch(pScreen, pBounty, , FX, FY, SX, SY, 50)
+			vBounty := Gdip_ImageSearch(pScreen, pBounty, , FX, FY, SX, SY, 25)
 		if Criminal
-			vCriminal := Gdip_ImageSearch(pScreen, pCriminal, , FX, FY, SX, SY, 50)
+			vCriminal := Gdip_ImageSearch(pScreen, pCriminal, , FX, FY, SX, SY, 25)
 		if LimitedEngagement
-			vLimitedEngagement := Gdip_ImageSearch(pScreen, pLimitedEngagement, , FX, FY, SX, SY, 50)
+			vLimitedEngagement := Gdip_ImageSearch(pScreen, pLimitedEngagement, , FX, FY, SX, SY, 25)
 		if MilitiaWar
-			vMilitiaWar := Gdip_ImageSearch(pScreen, pMilitiaWar, , FX, FY, SX, SY, 50)
+			vMilitiaWar := Gdip_ImageSearch(pScreen, pMilitiaWar, , FX, FY, SX, SY, 25)
 		if Neutral
-			vNeutral := Gdip_ImageSearch(pScreen, pNeutral, , FX, FY, SX, SY, 50)
+			vNeutral := Gdip_ImageSearch(pScreen, pNeutral, , FX, FY, SX, SY, 25)
 		if Outlaw
-			vOutlaw := Gdip_ImageSearch(pScreen, pOutlaw, , FX, FY, SX, SY, 50)
+			vOutlaw := Gdip_ImageSearch(pScreen, pOutlaw, , FX, FY, SX, SY, 25)
 		if SecurityStatusBelowZero
-			vSecurityStatusBelowZero := Gdip_ImageSearch(pScreen, pSecurityStatusBelowZero, , FX, FY, SX, SY, 50)
+			vSecurityStatusBelowZero := Gdip_ImageSearch(pScreen, pSecurityStatusBelowZero, , FX, FY, SX, SY, 25)
 		if Suspect
-			vSuspect := Gdip_ImageSearch(pScreen, pSuspect, , FX, FY, SX, SY, 50)
+			vSuspect := Gdip_ImageSearch(pScreen, pSuspect, , FX, FY, SX, SY, 25)
 		if TerribleStanding
-			vTerribleStanding := Gdip_ImageSearch(pScreen, pTerribleStanding, , FX, FY, SX, SY, 50)
+			vTerribleStanding := Gdip_ImageSearch(pScreen, pTerribleStanding, , FX, FY, SX, SY, 25)
 		if War
-			vWar := Gdip_ImageSearch(pScreen, pWar, , FX, FY, SX, SY, 50)
+			vWar := Gdip_ImageSearch(pScreen, pWar, , FX, FY, SX, SY, 25)
 		; NPC 탭 1
 		if Drone
-			vDrone := Gdip_ImageSearch(pScreen, pDrone, , FX, FY, SX, SY, 50)
+			vDrone := Gdip_ImageSearch(pScreen, pDrone, , FX, FY, SX, SY, 25)
 		if Sentry_drone
-			vSentry_drone := Gdip_ImageSearch(pScreen, pSentry_drone, , FX, FY, SX, SY, 50)
+			vSentry_drone := Gdip_ImageSearch(pScreen, pSentry_drone, , FX, FY, SX, SY, 25)
 		if Fighter
-			vFighter := Gdip_ImageSearch(pScreen, pFighter, , FX, FY, SX, SY, 50)
+			vFighter := Gdip_ImageSearch(pScreen, pFighter, , FX, FY, SX, SY, 25)
 		if Capsule
-			vCapsule := Gdip_ImageSearch(pScreen, pCapsule, , FX, FY, SX, SY, 50)
+			vCapsule := Gdip_ImageSearch(pScreen, pCapsule, , FX, FY, SX, SY, 25)
 		if Shuttle
-			vShuttle := Gdip_ImageSearch(pScreen, pShuttle, , FX, FY, SX, SY, 50)
+			vShuttle := Gdip_ImageSearch(pScreen, pShuttle, , FX, FY, SX, SY, 25)
 		if Rookie
-			vRookie := Gdip_ImageSearch(pScreen, pRookie, , FX, FY, SX, SY, 50)
+			vRookie := Gdip_ImageSearch(pScreen, pRookie, , FX, FY, SX, SY, 25)
 		if Mining_frigate
-			vMining_frigate := Gdip_ImageSearch(pScreen, pMining_frigate, , FX, FY, SX, SY, 50)
+			vMining_frigate := Gdip_ImageSearch(pScreen, pMining_frigate, , FX, FY, SX, SY, 25)
 		if Mining_barge
-			vMining_barge := Gdip_ImageSearch(pScreen, pMining_barge, , FX, FY, SX, SY, 50)
+			vMining_barge := Gdip_ImageSearch(pScreen, pMining_barge, , FX, FY, SX, SY, 25)
 		if Industrial
-			vIndustrial := Gdip_ImageSearch(pScreen, pIndustrial, , FX, FY, SX, SY, 50)
+			vIndustrial := Gdip_ImageSearch(pScreen, pIndustrial, , FX, FY, SX, SY, 25)
 		if Industrial_command
-			vIndustrial_command := Gdip_ImageSearch(pScreen, pIndustrial_command, , FX, FY, SX, SY, 50)
+			vIndustrial_command := Gdip_ImageSearch(pScreen, pIndustrial_command, , FX, FY, SX, SY, 25)
 		if Industrial_capital
-			vIndustrial_capital := Gdip_ImageSearch(pScreen, pIndustrial_capital, , FX, FY, SX, SY, 50)
+			vIndustrial_capital := Gdip_ImageSearch(pScreen, pIndustrial_capital, , FX, FY, SX, SY, 25)
 		if Sentry
-			vSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 50)
+			vSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 25)
 		; NPC 탭 2
 		if Frigate
-			vFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 50)
+			vFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
 		if Destroyer
-			vDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 50)
+			vDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 25)
 		if Cruiser
-			vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 50)
+			vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
 		if Battlecruiser
-			vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 50)
+			vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
 		if Battleship
-			vBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 50)
+			vBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
 		if Dreadnought
-			vDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 50)
+			vDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
 		if Carrier
-			vCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 50)
+			vCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 25)
 		if Supercarrier
-			vSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 50)
+			vSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 25)
 		if Titan
-			vTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 50)
+			vTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 25)
 		
 		; 체크박스에 아무것도 체크되지 않았을 경우 메모리 삭제 후 루프 탈출
 		if !(Alliance || Corporation ExcellentStanding || Fleet || GoodStanding || MilitiaAlly || AvailableKillRight || BadStanding || Bounty || Criminal || LimitedEngagement || MilitiaWar || Neutral || Outlaw || SecurityStatusBelowZero || Suspect || TerribleStanding || War || Drone || Sentry_drone || Fighter || Capsule || Shuttle || Rookie || Mining_frigate || Mining_barge || Industrial || Industrial_command || Industrial_capital || Sentry || Frigate || Destroyer || Cruiser || Battlecruiser || Battleship || Dreadnought || Carrier || Supercarrier || Titan)
