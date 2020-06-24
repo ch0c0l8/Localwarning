@@ -4,8 +4,11 @@ then, Use the mouse to set the arena (think like mouse drag)
 - if you using "Set Mouse Position" Button, it's so easy
 
 # WARNINGS
-- don't change UI scale. only 100%
+- only UI scaling 90% or 100%
 - The coordinates are based on the Eve online screen (Relative coordinates)
+## 2020/06/24
+ - Add UI Scaling 90%
+ - Modify the "Set Mouse Position" function
 
 ## 2020/06/23
  - Add WinActivate
