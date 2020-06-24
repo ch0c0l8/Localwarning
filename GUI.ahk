@@ -5,6 +5,8 @@ Gui, Tab, 1
 Gui, Add, Edit, x10 y30 w110 h20 vName Limit40 +Center, %name%
 Gui, Add, Text, x10 y55 w70 h20 +Center, Delay(ms)
 Gui, Add, Edit, x90 y55 w30 h20 vDelay Number Limit4 +Center, %Delay%
+Gui, Add, Checkbox, x10 y80 vWA checked%WA%, WinActivate
+Gui, Add, Checkbox, x10 y100 gUI90 vUI90 checked%UI90%, UI Scaling 90`%
 Gui, Add, Text, x130 y30 w70 h20 +Center, First X
 Gui, Add, Edit, x210 y30 w30 h20 vFX Number Limit4 +Center, %FX%
 Gui, Add, Text, x130 y55 w70 h20 +Center, First Y
@@ -13,7 +15,6 @@ Gui, Add, Text, x130 y80 w70 h20 +Center, Second X
 Gui, Add, Edit, x210 y80 w30 h20 vSX Number Limit4 +Center, %SX%
 Gui, Add, Text, x130 y105 w70 h20 +Center, Second Y
 Gui, Add, Edit, x210 y105 w30 h20 vSY Number Limit4 +Center, %SY%
-Gui, Add, Checkbox, x10 y80 vWA checked%WA%, WinActivate
 Gui, Add, Text, x12 y140 w230 h20 +Center, Made by Odunen Yatolila
 Gui, Tab, 2
 Gui, Add,Picture,x10 y30 w12 h12, image/Friendly/Fleet.gif
@@ -101,151 +102,182 @@ Gui, Tab
 Gui, Add, Button, x12 y160 w230 h20 vSMP gSMP +Center, Set Mouse Position
 Gui, Add, Button, x12 y180 w230 h20 gStart vstart +Center, Start and Save
 Gui, Add, Button, x12 y180 w230 h20 gStop vstop +Center, Stop
-Gui, Add, Button, x12 y200 w230 h20 gExitApp +Center, Exit App
+Gui, Add, Button, x12 y200 w230 h20 gExit_App +Center, Exit App
 
 GuiControl, hide, stop
+
+;UI 스케일링 90% 사용시 NPC 탭 비활성화
+if UI90
+{
+	GuiControl, Disabled, Drone
+	GuiControl, Disabled, Sentry_drone
+	GuiControl, Disabled, Fighter
+	GuiControl, Disabled, Capsule
+	GuiControl, Disabled, Shuttle
+	GuiControl, Disabled, Rookie
+	GuiControl, Disabled, Mining_frigate
+	GuiControl, Disabled, Mining_barge
+	GuiControl, Disabled, Industrial
+	GuiControl, Disabled, Industrial_command
+	GuiControl, Disabled, Industrial_capital
+	GuiControl, Disabled, Sentry
+
+	GuiControl, Disabled, Frigate
+	GuiControl, Disabled, Destroyer
+	GuiControl, Disabled, Cruiser
+	GuiControl, Disabled, Battlecruiser
+	GuiControl, Disabled, Battleship
+	GuiControl, Disabled, Dreadnought
+	GuiControl, Disabled, Carrier
+	GuiControl, Disabled, Supercarrier
+	GuiControl, Disabled, Titan
+}
+
+; UI 스케일링 100% 사용시 NPC 탭 활성화
+if !UI90
+{
+	GuiControl, Enabled, Drone
+	GuiControl, Enabled, Sentry_drone
+	GuiControl, Enabled, Fighter
+	GuiControl, Enabled, Capsule
+	GuiControl, Enabled, Shuttle
+	GuiControl, Enabled, Rookie
+	GuiControl, Enabled, Mining_frigate
+	GuiControl, Enabled, Mining_barge
+	GuiControl, Enabled, Industrial
+	GuiControl, Enabled, Industrial_command
+	GuiControl, Enabled, Industrial_capital
+	GuiControl, Enabled, Sentry
+
+	GuiControl, Enabled, Frigate
+	GuiControl, Enabled, Frigate
+	GuiControl, Enabled, Destroyer
+	GuiControl, Enabled, Cruiser
+	GuiControl, Enabled, Battlecruiser
+	GuiControl, Enabled, Battleship
+	GuiControl, Enabled, Dreadnought
+	GuiControl, Enabled, Carrier
+	GuiControl, Enabled, Supercarrier
+	GuiControl, Enabled, Titan
+}
+
+return
+
+;UI 스케일링 90% 체크했을 때 NPC 탭 비활성화
+UI90:
+{
+	UI90 := !UI90
+	IniWrite, %UI90%, data.ini, SetValue, UI90
+	IniRead, UI90, data.ini, SetValue, UI90
+	if UI90
+	{
+		GuiControl, Disabled, Drone
+		GuiControl, Disabled, Sentry_drone
+		GuiControl, Disabled, Fighter
+		GuiControl, Disabled, Capsule
+		GuiControl, Disabled, Shuttle
+		GuiControl, Disabled, Rookie
+		GuiControl, Disabled, Mining_frigate
+		GuiControl, Disabled, Mining_barge
+		GuiControl, Disabled, Industrial
+		GuiControl, Disabled, Industrial_command
+		GuiControl, Disabled, Industrial_capital
+		GuiControl, Disabled, Sentry
+
+		GuiControl, Disabled, Frigate
+		GuiControl, Disabled, Destroyer
+		GuiControl, Disabled, Cruiser
+		GuiControl, Disabled, Battlecruiser
+		GuiControl, Disabled, Battleship
+		GuiControl, Disabled, Dreadnought
+		GuiControl, Disabled, Carrier
+		GuiControl, Disabled, Supercarrier
+		GuiControl, Disabled, Titan
+	}
+	if !(UI90)
+	{
+		GuiControl, Enabled, Drone
+		GuiControl, Enabled, Sentry_drone
+		GuiControl, Enabled, Fighter
+		GuiControl, Enabled, Capsule
+		GuiControl, Enabled, Shuttle
+		GuiControl, Enabled, Rookie
+		GuiControl, Enabled, Mining_frigate
+		GuiControl, Enabled, Mining_barge
+		GuiControl, Enabled, Industrial
+		GuiControl, Enabled, Industrial_command
+		GuiControl, Enabled, Industrial_capital
+		GuiControl, Enabled, Sentry
+
+		GuiControl, Enabled, Frigate
+		GuiControl, Enabled, Frigate
+		GuiControl, Enabled, Destroyer
+		GuiControl, Enabled, Cruiser
+		GuiControl, Enabled, Battlecruiser
+		GuiControl, Enabled, Battleship
+		GuiControl, Enabled, Dreadnought
+		GuiControl, Enabled, Carrier
+		GuiControl, Enabled, Supercarrier
+		GuiControl, Enabled, Titan
+	}
+}
 return
 
 ; 마우스 간편 좌표 설정
 SMP:
 {
 	gui, submit, nohide
-	CoordMode, Mouse, Window
+	CoordMode, Mouse, Client
 	GuiControl, Disabled, SMP
-	
-	; 첫번째 좌표 클릭 설정
-	KeyWait, Lbutton, D
-	MouseGetPos, posx1, posy1
-	guicontrol,,FX, %posx1%
-	guicontrol,,FY, %posy1%
-	msgbox, 0, Local Warning, Set next mouse position
-	
-	;두번째 좌표 클릭 설정
-	KeyWait, Lbutton, D
-	MouseGetPos, posx2, posy2
-	guicontrol,,SX, %posx2%
-	guicontrol,,SY, %posy2%
-	msgbox, 0, Local Warning, Setup completed
-	
+
+	; 최신 값 불러오기
+	IniWrite, %name%, data.ini, Name, name
+	IniRead, name, data.ini, Name, name
+	Title := "EVE - " . name
+
+	; 캐릭터명에 입력을 안했을 경우 뜨는 메시지박스
+	if (Name = "")
+	{
+		msgbox, 0, Local Warning, Please enter a character name
+		goto stop
+	}
+
+	; 이브온라인 핸들을 찾지 못했다는 메시지 박스
+	IfWinNotExist, %Title%
+	{
+		msgbox, 0, Local Warning, EVE Online not detected
+	}
+	; 이브온라인 핸들이 있고, 캐릭터명이 있으면 시작
+	IfWinExist, %Title%
+	{
+		WinActivate, %Title%
+		; 첫번째 좌표 클릭 설정
+		KeyWait, Lbutton, D
+		MouseGetPos, posx1, posy1
+		GuiControl,,FX, %posx1%
+		GuiControl,,FY, %posy1%
+		sleep, 100
+		; 두번째 좌표 클릭 설정
+		KeyWait, Lbutton, D
+		MouseGetPos, posx2, posy2
+		GuiControl,,SX, %posx2%
+		GuiControl,,SY, %posy2%
+		msgbox, 0, Local Warning, Setup completed
+	}
 	GuiControl, Enabled, SMP
 }
 return
 
-; 앱 종료시
-ExitApp:
+; 앱 종료
+Exit_App:
 {
-	IniWrite, %name%, data.ini, Name, Name
-
-	IniWrite, %FX%, data.ini, Coordinate, FX
-	IniWrite, %FY%, data.ini, Coordinate, FY
-	IniWrite, %SX%, data.ini, Coordinate, SX
-	IniWrite, %SY%, data.ini, Coordinate, SY
-
-	IniWrite, %Delay%, data.ini, SetValue, delay
-	IniWrite, %WA%, data.ini, SetValue, WA
-
-	IniWrite, %Alliance%, data.ini, Friendly, Alliance
-	IniWrite, %Corporation%, data.ini, Friendly, Corporation
-	IniWrite, %ExcellentStanding%, data.ini, Friendly, ExcellentStanding
-	IniWrite, %Fleet%, data.ini, Friendly, Fleet
-	IniWrite, %GoodStanding%, data.ini, Friendly, GoodStanding
-	IniWrite, %MilitiaAlly%, data.ini, Friendly, MilitiaAlly
-
-	IniWrite, %AvailableKillRight%, data.ini, Hostiles, AvailableKillRight
-	IniWrite, %BadStanding%, data.ini, Hostiles, BadStanding
-	IniWrite, %Bounty%, data.ini, Hostiles, Bounty
-	IniWrite, %Criminal%, data.ini, Hostiles, Criminal
-	IniWrite, %LimitedEngagement%, data.ini, Hostiles, LimitedEngagement
-	IniWrite, %MilitiaWar%, data.ini, Hostiles, MilitiaWar
-	IniWrite, %Neutral%, data.ini, Hostiles, Neutral
-	IniWrite, %Outlaw%, data.ini, Hostiles, Outlaw
-	IniWrite, %SecurityStatusBelowZero%, data.ini, Hostiles, SecurityStatusBelowZero
-	IniWrite, %Suspect%, data.ini, Hostiles, Suspect
-	IniWrite, %TerribleStanding%, data.ini, Hostiles, TerribleStanding
-	IniWrite, %War%, data.ini, Hostiles, War
-
-	IniWrite, %Drone%, data.ini, NPC, Drone
-	IniWrite, %Sentry_drone%, data.ini, NPC, Sentry_drone
-	IniWrite, %Fighter%, data.ini, NPC, Fighter
-	IniWrite, %Capsule%, data.ini, NPC, Capsule
-	IniWrite, %Shuttle%, data.ini, NPC, Shuttle
-	IniWrite, %Rookie%, data.ini, NPC, Rookie
-	IniWrite, %Mining_frigate%, data.ini, NPC, Mining_frigate
-	IniWrite, %Mining_barge%, data.ini, NPC, Mining_barge
-	IniWrite, %Industrial%, data.ini, NPC, Industrial
-	IniWrite, %Industrial_command%, data.ini, NPC, Industrial_command
-	IniWrite, %Industrial_capital%, data.ini, NPC, Industrial_capital
-	IniWrite, %Sentry%, data.ini, NPC, Sentry
-
-	IniWrite, %Frigate%, data.ini, NPC, Frigate
-	IniWrite, %Destroyer%, data.ini, NPC, Destroyer
-	IniWrite, %Cruiser%, data.ini, NPC, Cruiser
-	IniWrite, %Battlecruiser%, data.ini, NPC, Battlecruiser
-	IniWrite, %Battleship%, data.ini, NPC, Battleship
-	IniWrite, %Dreadnought%, data.ini, NPC, Dreadnought
-	IniWrite, %Carrier%, data.ini, NPC, Carrier
-	IniWrite, %Supercarrier%, data.ini, NPC, Supercarrier
-	IniWrite, %Titan%, data.ini, NPC, Titan
-
 	ExitApp
 }
 return
 
-; GUI에서 앱 종료를 눌렀을 경우
+; GUI에서 X 버튼을 눌렀을 경우
 GuiClose:
 {
-	IniWrite, %name%, data.ini, Name, Name
-
-	IniWrite, %FX%, data.ini, Coordinate, FX
-	IniWrite, %FY%, data.ini, Coordinate, FY
-	IniWrite, %SX%, data.ini, Coordinate, SX
-	IniWrite, %SY%, data.ini, Coordinate, SY
-
-	IniWrite, %Delay%, data.ini, SetValue, delay
-	IniWrite, %WA%, data.ini, SetValue, WA
-
-	IniWrite, %Alliance%, data.ini, Friendly, Alliance
-	IniWrite, %Corporation%, data.ini, Friendly, Corporation
-	IniWrite, %ExcellentStanding%, data.ini, Friendly, ExcellentStanding
-	IniWrite, %Fleet%, data.ini, Friendly, Fleet
-	IniWrite, %GoodStanding%, data.ini, Friendly, GoodStanding
-	IniWrite, %MilitiaAlly%, data.ini, Friendly, MilitiaAlly
-
-	IniWrite, %AvailableKillRight%, data.ini, Hostiles, AvailableKillRight
-	IniWrite, %BadStanding%, data.ini, Hostiles, BadStanding
-	IniWrite, %Bounty%, data.ini, Hostiles, Bounty
-	IniWrite, %Criminal%, data.ini, Hostiles, Criminal
-	IniWrite, %LimitedEngagement%, data.ini, Hostiles, LimitedEngagement
-	IniWrite, %MilitiaWar%, data.ini, Hostiles, MilitiaWar
-	IniWrite, %Neutral%, data.ini, Hostiles, Neutral
-	IniWrite, %Outlaw%, data.ini, Hostiles, Outlaw
-	IniWrite, %SecurityStatusBelowZero%, data.ini, Hostiles, SecurityStatusBelowZero
-	IniWrite, %Suspect%, data.ini, Hostiles, Suspect
-	IniWrite, %TerribleStanding%, data.ini, Hostiles, TerribleStanding
-	IniWrite, %War%, data.ini, Hostiles, War
-
-	IniWrite, %Drone%, data.ini, NPC, Drone
-	IniWrite, %Sentry_drone%, data.ini, NPC, Sentry_drone
-	IniWrite, %Fighter%, data.ini, NPC, Fighter
-	IniWrite, %Capsule%, data.ini, NPC, Capsule
-	IniWrite, %Shuttle%, data.ini, NPC, Shuttle
-	IniWrite, %Rookie%, data.ini, NPC, Rookie
-	IniWrite, %Mining_frigate%, data.ini, NPC, Mining_frigate
-	IniWrite, %Mining_barge%, data.ini, NPC, Mining_barge
-	IniWrite, %Industrial%, data.ini, NPC, Industrial
-	IniWrite, %Industrial_command%, data.ini, NPC, Industrial_command
-	IniWrite, %Industrial_capital%, data.ini, NPC, Industrial_capital
-	IniWrite, %Sentry%, data.ini, NPC, Sentry
-
-	IniWrite, %Frigate%, data.ini, NPC, Frigate
-	IniWrite, %Destroyer%, data.ini, NPC, Destroyer
-	IniWrite, %Cruiser%, data.ini, NPC, Cruiser
-	IniWrite, %Battlecruiser%, data.ini, NPC, Battlecruiser
-	IniWrite, %Battleship%, data.ini, NPC, Battleship
-	IniWrite, %Dreadnought%, data.ini, NPC, Dreadnought
-	IniWrite, %Carrier%, data.ini, NPC, Carrier
-	IniWrite, %Supercarrier%, data.ini, NPC, Supercarrier
-	IniWrite, %Titan%, data.ini, NPC, Titan
 	ExitApp
 }
 return

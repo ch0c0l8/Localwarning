@@ -7,6 +7,7 @@ IniRead, SY, data.ini, Coordinate, SY
 
 IniRead, Delay, data.ini, SetValue, delay
 IniRead, WA, data.ini, SetValue, WA
+IniRead, UI90, data.ini, SetValue, UI90
 
 IniRead, Alliance, data.ini, Friendly, Alliance
 IniRead, Corporation, data.ini, Friendly, Corporation
