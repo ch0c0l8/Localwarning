@@ -189,7 +189,7 @@ UI90:
 
 	If UI90
 	{
-		MsgBox, 4, Local Warning, If enable this, NPC tabs is disabled. do you still want to use it?
+		MsgBox, 4, Local Warning, If enable this, NPC tab is disabled. do you still want to use it?
 		IfMsgBox, No
 		{
 			UI90 := !UI90
@@ -312,6 +312,7 @@ return
 ; GUI에서 X 버튼을 눌렀을 경우
 GuiClose:
 {
+	Gui, hide
 	TrayTip, Local Warning, Working in the background, 3, 1
 }
 return
