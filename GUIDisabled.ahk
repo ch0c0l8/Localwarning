@@ -7,6 +7,8 @@ GuiControl, Disabled, Delay
 GuiControl, Disabled, WA
 GuiControl, Disabled, UI90
 GuiControl, Disabled, SMP
+GuiControl, Disabled, Start
+GuiControl, Disabled, ExitApp
 
 GuiControl, Disabled, Alliance
 GuiControl, Disabled, Corporation

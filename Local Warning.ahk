@@ -18,29 +18,33 @@ start:
 	GuiControl, hide, start
 	GuiControl, show, stop
 
+	; 스타트 트레이 비활성화, 스탑 트레이 활성화
+	Menu, Tray, Disable, Start
+	Menu, Tray, Enable, Stop
+
 	; 기본 값 넣기
 	#IncludeAgain IniRead.ahk
 	Title := "EVE - " . name
 	FindImage := 0
 
+	; 이브온라인 핸들을 찾지 못하면 이미지 서치 시작 불가능
+	IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+	{
+		TrayTip, Local Warning, EVE Online not detected, 1, 3
+		goto stop
+	}
+
 	; 캐릭터명 입력창에 아무것도 없으면 이미지 서치 시작 불가능
 	if (Name = "")
 	{
-		msgbox, 0, Local Warning, Please enter a character name
+		TrayTip, Local Warning, Please enter a character name, 1, 3
 		goto stop
 	}
 
-	; 이브온라인 핸들을 찾지 못하면 이미지 서치 시작 불가능
-	IfWinNotExist, %Title%
-	{
-		msgbox, 0, Local Warning, EVE Online not detected
-		goto stop
-	}
-
-	; 체크박스에 아무것도 체크되지 않았을 경우 이미지 서치 시작 불가능
+	; 체크박스에 아무것도 체크하지 않았을 경우 이미지 서치 시작 불가능
 	if !(Alliance || Corporation || ExcellentStanding || Fleet || GoodStanding || MilitiaAlly || AvailableKillRight || BadStanding || Bounty || Criminal || LimitedEngagement || MilitiaWar || Neutral || Outlaw || SecurityStatusBelowZero || Suspect || TerribleStanding || War || Drone || Sentry_drone || Fighter || Capsule || Shuttle || Rookie || Mining_frigate || Mining_barge || Industrial || Industrial_command || Industrial_capital || Sentry || Frigate || Destroyer || Cruiser || Battlecruiser || Battleship || Dreadnought || Carrier || Supercarrier || Titan)
 	{
-		msgbox, 0, Local Warning, Please check at least one check box
+		TrayTip, Local Warning, Please check at least one check box, 1, 3
 		goto stop
 	}
 
@@ -177,8 +181,16 @@ start:
 			Gdip_Shutdown(pToken)
 			break
 		}
+
+		; 이브온라인 핸들을 찾지 못하면 이미지 서치 시작 불가능
+		IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+		{
+			msgbox, 16, Local Warning, EVE Online not detected
+			goto stop
+		}
+		
 		; 이브온라인 스크린 이미지 데이터 입력
-		pScreen := Gdip_BitmapFromHwnd(WinExist(Title))
+		pScreen := Gdip_BitmapFromHwnd(WinExist(Title "ahk_exe exefile.exe ahk_class triuiScreen"))
 
 		; 체크된 이미지만 서치
 		; Friendly 탭
@@ -288,7 +300,7 @@ start:
 			; 이전값과 같지 않고 WinActive 체크가 되있으면 화면을 불러온다
 			if !(FindImageBefore = FindImage) && WA
 			{
-				WinActivate, %Title%
+				WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 			}
 			sleep, %delay%
 		}
@@ -297,6 +309,7 @@ start:
 			sleep, %Delay% ; 딜레이
 		}
 		; 이브온라인 스크린 이미지 데이터 삭제 및 서치 값 리셋
+		Gdip_DisposeImage(pScreen)
 		vAlliance := 0
 		vCorporation := 0
 		vExcellentStanding := 0
@@ -335,7 +348,6 @@ start:
 		vCarrier := 0
 		vSupercarrier := 0
 		vTitan := 0
-		Gdip_DisposeImage(pScreen)
 	}
 }
 return
@@ -350,5 +362,9 @@ stop:
 	; 스타트 버튼으로 변경
 	GuiControl, hide, stop
 	GuiControl, show, start
+
+	; 스타트 트레이 활성화, 스탑 트레이 비활성화
+	Menu, Tray, Enable, Start
+	Menu, Tray, Disable, Stop
 }
 return

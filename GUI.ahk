@@ -1,3 +1,5 @@
+#NoEnv
+#SingleInstance force
 ; GUI 
 Gui, Show, x718 y400 w260 h230, Local Warning
 Gui, Add, Tab, x0 y-1 w260 h230 , Main|Friendly|Hostile|NPC 1|NPC 2
@@ -100,9 +102,9 @@ Gui, Add,Picture,x130 y90 w12 h12, image/NPC/Icon_red_titan.png
 Gui, Add, Checkbox, x145 y90 vTitan checked%Titan%, Titan
 Gui, Tab
 Gui, Add, Button, x12 y160 w230 h20 vSMP gSMP +Center, Set Mouse Position
-Gui, Add, Button, x12 y180 w230 h20 gStart vstart +Center, Start and Save
+Gui, Add, Button, x12 y180 w230 h20 gStart vstart +Center, Start
 Gui, Add, Button, x12 y180 w230 h20 gStop vstop +Center, Stop
-Gui, Add, Button, x12 y200 w230 h20 gExit_App +Center, Exit App
+Gui, Add, Button, x12 y200 w230 h20 gExitApp +Center, Exit App
 
 GuiControl, hide, stop
 
@@ -161,65 +163,94 @@ if !UI90
 	GuiControl, Enabled, Titan
 }
 
+; 트레이 메뉴
+Menu, Tray, NoStandard
+Menu, Tray, Add, Show GUI, ShowGUI
+Menu, Tray, Default, Show GUI
+Menu, Tray, Add, Start, Start
+Menu, Tray, Add, Stop, Stop
+Menu, Tray, Add, Exit App, ExitApp
+
+Menu, Tray, Disable, Stop
 return
 
-;UI 스케일링 90% 체크했을 때 NPC 탭 비활성화
+ShowGUI:
+{
+	Gui, Show
+}
+return
+
+; UI 스케일링 90% 체크했을 때 NPC 탭 비활성화
 UI90:
 {
 	UI90 := !UI90
 	IniWrite, %UI90%, data.ini, SetValue, UI90
 	IniRead, UI90, data.ini, SetValue, UI90
-	if UI90
-	{
-		GuiControl, Disabled, Drone
-		GuiControl, Disabled, Sentry_drone
-		GuiControl, Disabled, Fighter
-		GuiControl, Disabled, Capsule
-		GuiControl, Disabled, Shuttle
-		GuiControl, Disabled, Rookie
-		GuiControl, Disabled, Mining_frigate
-		GuiControl, Disabled, Mining_barge
-		GuiControl, Disabled, Industrial
-		GuiControl, Disabled, Industrial_command
-		GuiControl, Disabled, Industrial_capital
-		GuiControl, Disabled, Sentry
 
-		GuiControl, Disabled, Frigate
-		GuiControl, Disabled, Destroyer
-		GuiControl, Disabled, Cruiser
-		GuiControl, Disabled, Battlecruiser
-		GuiControl, Disabled, Battleship
-		GuiControl, Disabled, Dreadnought
-		GuiControl, Disabled, Carrier
-		GuiControl, Disabled, Supercarrier
-		GuiControl, Disabled, Titan
-	}
-	if !(UI90)
+	If UI90
 	{
-		GuiControl, Enabled, Drone
-		GuiControl, Enabled, Sentry_drone
-		GuiControl, Enabled, Fighter
-		GuiControl, Enabled, Capsule
-		GuiControl, Enabled, Shuttle
-		GuiControl, Enabled, Rookie
-		GuiControl, Enabled, Mining_frigate
-		GuiControl, Enabled, Mining_barge
-		GuiControl, Enabled, Industrial
-		GuiControl, Enabled, Industrial_command
-		GuiControl, Enabled, Industrial_capital
-		GuiControl, Enabled, Sentry
+		MsgBox, 4, Local Warning, If enable this, NPC tabs is disabled. do you still want to use it?
+		IfMsgBox, No
+		{
+			UI90 := !UI90
+			GuiControl, , UI90, 0
+		}
+		IfMsgBox, Yes
+		{
+			if UI90
+			{
+				GuiControl, Disabled, Drone
+				GuiControl, Disabled, Sentry_drone
+				GuiControl, Disabled, Fighter
+				GuiControl, Disabled, Capsule
+				GuiControl, Disabled, Shuttle
+				GuiControl, Disabled, Rookie
+				GuiControl, Disabled, Mining_frigate
+				GuiControl, Disabled, Mining_barge
+				GuiControl, Disabled, Industrial
+				GuiControl, Disabled, Industrial_command
+				GuiControl, Disabled, Industrial_capital
+				GuiControl, Disabled, Sentry
 
-		GuiControl, Enabled, Frigate
-		GuiControl, Enabled, Frigate
-		GuiControl, Enabled, Destroyer
-		GuiControl, Enabled, Cruiser
-		GuiControl, Enabled, Battlecruiser
-		GuiControl, Enabled, Battleship
-		GuiControl, Enabled, Dreadnought
-		GuiControl, Enabled, Carrier
-		GuiControl, Enabled, Supercarrier
-		GuiControl, Enabled, Titan
+				GuiControl, Disabled, Frigate
+				GuiControl, Disabled, Destroyer
+				GuiControl, Disabled, Cruiser
+				GuiControl, Disabled, Battlecruiser
+				GuiControl, Disabled, Battleship
+				GuiControl, Disabled, Dreadnought
+				GuiControl, Disabled, Carrier
+				GuiControl, Disabled, Supercarrier
+				GuiControl, Disabled, Titan
+			}
+			if !(UI90)
+			{
+				GuiControl, Enabled, Drone
+				GuiControl, Enabled, Sentry_drone
+				GuiControl, Enabled, Fighter
+				GuiControl, Enabled, Capsule
+				GuiControl, Enabled, Shuttle
+				GuiControl, Enabled, Rookie
+				GuiControl, Enabled, Mining_frigate
+				GuiControl, Enabled, Mining_barge
+				GuiControl, Enabled, Industrial
+				GuiControl, Enabled, Industrial_command
+				GuiControl, Enabled, Industrial_capital
+				GuiControl, Enabled, Sentry
+
+				GuiControl, Enabled, Frigate
+				GuiControl, Enabled, Frigate
+				GuiControl, Enabled, Destroyer
+				GuiControl, Enabled, Cruiser
+				GuiControl, Enabled, Battlecruiser
+				GuiControl, Enabled, Battleship
+				GuiControl, Enabled, Dreadnought
+				GuiControl, Enabled, Carrier
+				GuiControl, Enabled, Supercarrier
+				GuiControl, Enabled, Titan
+			}
+		}
 	}
+	IniWrite, %UI90%, data.ini, SetValue, UI90
 }
 return
 
@@ -228,29 +259,31 @@ SMP:
 {
 	gui, submit, nohide
 	CoordMode, Mouse, Client
-	GuiControl, Disabled, SMP
+	#IncludeAgain GUIDisabled.ahk
 
 	; 최신 값 불러오기
 	IniWrite, %name%, data.ini, Name, name
 	IniRead, name, data.ini, Name, name
 	Title := "EVE - " . name
 
-	; 캐릭터명에 입력을 안했을 경우 뜨는 메시지박스
+	; 캐릭터명에 입력을 안했을 경우 뜨는 트레이팁
 	if (Name = "")
 	{
-		msgbox, 0, Local Warning, Please enter a character name
+		TrayTip, Local Warning, Please enter a character name, 1, 3
 		goto stop
 	}
 
-	; 이브온라인 핸들을 찾지 못했다는 메시지 박스
-	IfWinNotExist, %Title%
+	; 이브온라인 핸들을 찾지 못했다는 트레이팁
+	IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 	{
-		msgbox, 0, Local Warning, EVE Online not detected
+		TrayTip, Local Warning, EVE Online not detected, 1, 3
+		goto stop
 	}
-	; 이브온라인 핸들이 있고, 캐릭터명이 있으면 시작
-	IfWinExist, %Title%
+
+	; 이브온라인 핸들 찾았으면 좌표설정 시작
+	IfWinExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 	{
-		WinActivate, %Title%
+		WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 		; 첫번째 좌표 클릭 설정
 		KeyWait, Lbutton, D
 		MouseGetPos, posx1, posy1
@@ -262,14 +295,15 @@ SMP:
 		MouseGetPos, posx2, posy2
 		GuiControl,,SX, %posx2%
 		GuiControl,,SY, %posy2%
-		msgbox, 0, Local Warning, Setup completed
+		#IncludeAgain IniWrite.ahk
+		msgbox, 64, Local Warning, Setting Complete
 	}
-	GuiControl, Enabled, SMP
+	#IncludeAgain GUIEnabled.ahk
 }
 return
 
 ; 앱 종료
-Exit_App:
+ExitApp:
 {
 	ExitApp
 }
@@ -278,6 +312,6 @@ return
 ; GUI에서 X 버튼을 눌렀을 경우
 GuiClose:
 {
-	ExitApp
+	TrayTip, Local Warning, Working in the background, 3, 1
 }
 return
