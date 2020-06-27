@@ -10,6 +10,9 @@ GuiControl, Enabled, SMP
 GuiControl, Enabled, Start
 GuiControl, Enabled, ExitApp
 
+GuiControl, Enabled, DroneHalfHP
+GuiControl, Enabled, NPCisDead
+
 GuiControl, Enabled, Alliance
 GuiControl, Enabled, Corporation
 GuiControl, Enabled, ExcellentStanding
@@ -33,19 +36,6 @@ GuiControl, Enabled, War
 ; UI 스케일링 90% 사용시 무시
 if !UI90
 {
-	GuiControl, Enabled, Drone
-	GuiControl, Enabled, Sentry_drone
-	GuiControl, Enabled, Fighter
-	GuiControl, Enabled, Capsule
-	GuiControl, Enabled, Shuttle
-	GuiControl, Enabled, Rookie
-	GuiControl, Enabled, Mining_frigate
-	GuiControl, Enabled, Mining_barge
-	GuiControl, Enabled, Industrial
-	GuiControl, Enabled, Industrial_command
-	GuiControl, Enabled, Industrial_capital
-	GuiControl, Enabled, Sentry
-
 	GuiControl, Enabled, Frigate
 	GuiControl, Enabled, Frigate
 	GuiControl, Enabled, Destroyer
@@ -56,4 +46,5 @@ if !UI90
 	GuiControl, Enabled, Carrier
 	GuiControl, Enabled, Supercarrier
 	GuiControl, Enabled, Titan
+	GuiControl, Enabled, Sentry
 }

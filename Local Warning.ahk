@@ -26,6 +26,7 @@ start:
 	#IncludeAgain IniRead.ahk
 	Title := "EVE - " . name
 	FindImage := 0
+	WinGetPos, , , ScreenWidthBefore, ScreenHeightBefore, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 
 	; 이브온라인 핸들을 찾지 못하면 이미지 서치 시작 불가능
 	IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
@@ -42,7 +43,7 @@ start:
 	}
 
 	; 체크박스에 아무것도 체크하지 않았을 경우 이미지 서치 시작 불가능
-	if !(Alliance || Corporation || ExcellentStanding || Fleet || GoodStanding || MilitiaAlly || AvailableKillRight || BadStanding || Bounty || Criminal || LimitedEngagement || MilitiaWar || Neutral || Outlaw || SecurityStatusBelowZero || Suspect || TerribleStanding || War || Drone || Sentry_drone || Fighter || Capsule || Shuttle || Rookie || Mining_frigate || Mining_barge || Industrial || Industrial_command || Industrial_capital || Sentry || Frigate || Destroyer || Cruiser || Battlecruiser || Battleship || Dreadnought || Carrier || Supercarrier || Titan)
+	if !(Alliance && Corporation || ExcellentStanding || Fleet || GoodStanding || MilitiaAlly || AvailableKillRight || BadStanding || Bounty || Criminal || LimitedEngagement || MilitiaWar || Neutral || Outlaw || SecurityStatusBelowZero || Suspect || TerribleStanding || War || Sentry || Frigate || Destroyer || Cruiser || Battlecruiser || Battleship || Dreadnought || Carrier || Supercarrier || Titan)
 	{
 		TrayTip, Local Warning, Please check at least one check box, 1, 3
 		goto stop
@@ -74,6 +75,8 @@ start:
 		pSuspect := Gdip_CreateBitmapFromFile("image/Hostiles90/Suspect.png")
 		pTerribleStanding := Gdip_CreateBitmapFromFile("image/Hostiles90/TerribleStanding.png")
 		pWar := Gdip_CreateBitmapFromFile("image/Hostiles90/War.png")
+
+		pDroneHalfHP := Gdip_CreateBitmapFromFile("image/DroneHalfHP.png")
 	}
 	
 	; UI 스케일링 100% 사용
@@ -100,19 +103,6 @@ start:
 		pTerribleStanding := Gdip_CreateBitmapFromFile("image/Hostiles/TerribleStanding.gif")
 		pWar := Gdip_CreateBitmapFromFile("image/Hostiles/War.gif")
 
-		pDrone := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_drone.png")
-		pSentry_drone := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_sentry_drone.png")
-		pFighter := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_fighter.png")
-		pCapsule := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_capsule.png")
-		pShuttle := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_shuttle.png")
-		pRookie := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_rookie.png")
-		pMining_frigate := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_mining_frigate.png")
-		pMining_barge := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_mining_barge.png")
-		pIndustrial := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_industrial.png")
-		pIndustrial_command := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_industrial_command_ship.png")
-		pIndustrial_capital := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_industrial_capital.png")
-		pSentry := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_tower.png")
-
 		pFrigate := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_frigate.png")
 		pDestroyer := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_destroyer.png")
 		pCruiser := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_cruiser.png")
@@ -122,6 +112,9 @@ start:
 		pCarrier := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_carrier.png")
 		pSupercarrier := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_supercarrier.png")
 		pTitan := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_titan.png")
+		pSentry := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_tower.png")
+
+		pDroneHalfHP := Gdip_CreateBitmapFromFile("image/DroneHalfHP.png")
 	}
 
 	; 이미지 서치 루프 시작
@@ -154,19 +147,6 @@ start:
 			Gdip_DisposeImage(pTerribleStanding)
 			Gdip_DisposeImage(pWar)
 
-			Gdip_DisposeImage(pDrone)
-			Gdip_DisposeImage(pSentry_drone)
-			Gdip_DisposeImage(pFighter)
-			Gdip_DisposeImage(pCapsule)
-			Gdip_DisposeImage(pShuttle)
-			Gdip_DisposeImage(pRookie)
-			Gdip_DisposeImage(pMining_frigate)
-			Gdip_DisposeImage(pMining_barge)
-			Gdip_DisposeImage(pIndustrial)
-			Gdip_DisposeImage(pIndustrial_command)
-			Gdip_DisposeImage(pIndustrial_capital)
-			Gdip_DisposeImage(pSentry)
-
 			Gdip_DisposeImage(pFrigate)
 			Gdip_DisposeImage(pDestroyer)
 			Gdip_DisposeImage(pCruiser)
@@ -176,6 +156,9 @@ start:
 			Gdip_DisposeImage(pCarrier)
 			Gdip_DisposeImage(pSupercarrier)
 			Gdip_DisposeImage(pTitan)
+			Gdip_DisposeImage(pSentry)
+
+			Gdip_DisposeImage(pDroneHalfHP)
 			
 			; Gdip 종료
 			Gdip_Shutdown(pToken)
@@ -188,11 +171,19 @@ start:
 			msgbox, 16, Local Warning, EVE Online not detected
 			goto stop
 		}
-		
+		WinGetPos, , , ScreenWidthAfter, ScreenHeightAfter, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+		if (ScreenWidthBefore != ScreenWidthAfter) or (ScreenHeightBefore != ScreenHeightAfter)
+		{
+			msgbox, 16, Local Warning, Resolution has changed`nPlease reset the coordinates
+			goto stop
+		}
 		; 이브온라인 스크린 이미지 데이터 입력
 		pScreen := Gdip_BitmapFromHwnd(WinExist(Title "ahk_exe exefile.exe ahk_class triuiScreen"))
 
 		; 체크된 이미지만 서치
+		if DroneHalfHP
+			vDroneHalfHPBefore := vDroneHalfHP
+			vDroneHalfHP := Gdip_ImageSearch(pScreen, pDroneHalfHP, , FX, FY, SX, SY, 25)
 		; Friendly 탭
 		if Alliance
 			vAlliance := Gdip_ImageSearch(pScreen, pAlliance, , FX, FY, SX, SY, 25)
@@ -231,55 +222,122 @@ start:
 			vTerribleStanding := Gdip_ImageSearch(pScreen, pTerribleStanding, , FX, FY, SX, SY, 25)
 		if War
 			vWar := Gdip_ImageSearch(pScreen, pWar, , FX, FY, SX, SY, 25)
-
-		; UI 스케일링 90%를 사용하면 무시
+		; UI 스케일링 90% 사용하면 무시
 		if !UI90
 		{
-			; NPC 탭 1
-			if Drone
-				vDrone := Gdip_ImageSearch(pScreen, pDrone, , FX, FY, SX, SY, 25)
-			if Sentry_drone
-				vSentry_drone := Gdip_ImageSearch(pScreen, pSentry_drone, , FX, FY, SX, SY, 25)
-			if Fighter
-				vFighter := Gdip_ImageSearch(pScreen, pFighter, , FX, FY, SX, SY, 25)
-			if Capsule
-				vCapsule := Gdip_ImageSearch(pScreen, pCapsule, , FX, FY, SX, SY, 25)
-			if Shuttle
-				vShuttle := Gdip_ImageSearch(pScreen, pShuttle, , FX, FY, SX, SY, 25)
-			if Rookie
-				vRookie := Gdip_ImageSearch(pScreen, pRookie, , FX, FY, SX, SY, 25)
-			if Mining_frigate
-				vMining_frigate := Gdip_ImageSearch(pScreen, pMining_frigate, , FX, FY, SX, SY, 25)
-			if Mining_barge
-				vMining_barge := Gdip_ImageSearch(pScreen, pMining_barge, , FX, FY, SX, SY, 25)
-			if Industrial
-				vIndustrial := Gdip_ImageSearch(pScreen, pIndustrial, , FX, FY, SX, SY, 25)
-			if Industrial_command
-				vIndustrial_command := Gdip_ImageSearch(pScreen, pIndustrial_command, , FX, FY, SX, SY, 25)
-			if Industrial_capital
-				vIndustrial_capital := Gdip_ImageSearch(pScreen, pIndustrial_capital, , FX, FY, SX, SY, 25)
-			if Sentry
-				vSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 25)
-			; NPC 탭 2
+			; NPC
 			if Frigate
-				vFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Destroyer
-				vDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vDestroyer := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Cruiser
-				vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Battlecruiser
-				vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Battleship
-				vBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Dreadnought
-				vDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Carrier
-				vCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Supercarrier
-				vSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 25)
+				}
+			}
 			if Titan
-				vTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 25)
+			{
+				if NPCisDead
+				{
+					dTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 25)
+				}
+			}
+			if Sentry
+			{
+				if NPCisDead
+				{
+					dSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 25)
+				}
+				else
+				{
+					vSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 25)
+				}
+			}
 		}
+
 		; FindImage 이전 값 대입
 		FindImageBefore := FindImage
 
@@ -291,12 +349,12 @@ start:
 
 		if !UI90
 		{
-			FindImage := vAlliance || vCorporation || vExcellentStanding || vFleet || vGoodStanding || vMilitiaAlly || vAvailableKillRight || vBadStanding || vBounty || vCriminal || vLimitedEngagement || vMilitiaWar || vNeutral || vOutlaw || vSecurityStatusBelowZero || vSuspect || vTerribleStanding || vWar || vDrone || vSentry_drone || vFighter || vCapsule || vShuttle || vRookie || vMining_frigate || vIndustrial || vIndustrial_command || vIndustrial_capital || vSentry || vFrigate || vDestroyer || vCruiser || vBattlecruiser || vBattleship || vDreadnought || vCarrier || vSupercarrier || vTitan
+			FindImage := vAlliance || vCorporation || vExcellentStanding || vFleet || vGoodStanding || vMilitiaAlly || vAvailableKillRight || vBadStanding || vBounty || vCriminal || vLimitedEngagement || vMilitiaWar || vNeutral || vOutlaw || vSecurityStatusBelowZero || vSuspect || vTerribleStanding || vWar || vSentry || vFrigate || vDestroyer || vCruiser || vBattlecruiser || vBattleship || vDreadnought || vCarrier || vSupercarrier || vTitan
 		}
-
+		; 로컬경보기가 작동하면 사운드 플레이
 		if FindImage
 		{
-			SoundPlay, warning.wav
+			SoundPlay, sound/warning.wav
 			; 이전값과 같지 않고 WinActive 체크가 되있으면 화면을 불러온다
 			if !(FindImageBefore = FindImage) && WA
 			{
@@ -304,10 +362,30 @@ start:
 			}
 			sleep, %delay%
 		}
-		else
+		; 로컬경보기가 작동하지 않으면 사운드 플레이 (드론체력절반)
+		if !FindImage
 		{
-			sleep, %Delay% ; 딜레이
+			CheckNPCDeadBefore := CheckNPCDead
+			CheckNPCDead := dFrigate || dDestroyer || dCruiser || dBattlecruiser || dBattleship || dDreadnought || dCarrier || dSupercarrier || dTitan || dSentry
+			if NPCisDead && !CheckNPCDead
+			{
+				SoundPlay, sound/NPC's_dead.mp3, 1
+				if !(CheckNPCDeadBefore = CheckNPCDead) && WA
+				{
+					WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+				}
+			}
+			if vDroneHalfHP && DroneHalfHP
+			{
+				SoundPlay, sound/Drone_HP_is_half.mp3, 1
+				; 이전값과 같지 않고 WinActive 체크가 되있으면 화면을 불러온다
+				if !(vDroneHalfHPBefore = vDroneHalfHP) && WA
+				{
+					WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+				}
+			}
 		}
+
 		; 이브온라인 스크린 이미지 데이터 삭제 및 서치 값 리셋
 		Gdip_DisposeImage(pScreen)
 		vAlliance := 0
@@ -328,17 +406,6 @@ start:
 		vSuspect := 0
 		vTerribleStanding := 0
 		vWar := 0
-		vDrone := 0
-		vSentry_drone := 0
-		vFighter := 0
-		vCapsule := 0
-		vShuttle := 0
-		vRookie := 0
-		vMining_frigate := 0
-		vIndustrial := 0
-		vIndustrial_command := 0
-		vIndustrial_capital := 0
-		vSentry := 0
 		vFrigate := 0
 		vDestroyer := 0
 		vCruiser := 0
@@ -348,6 +415,7 @@ start:
 		vCarrier := 0
 		vSupercarrier := 0
 		vTitan := 0
+		vSentry := 0
 	}
 }
 return

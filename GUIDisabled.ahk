@@ -10,6 +10,9 @@ GuiControl, Disabled, SMP
 GuiControl, Disabled, Start
 GuiControl, Disabled, ExitApp
 
+GuiControl, Disabled, DroneHalfHP
+GuiControl, Disabled, NPCisDead
+
 GuiControl, Disabled, Alliance
 GuiControl, Disabled, Corporation
 GuiControl, Disabled, ExcellentStanding

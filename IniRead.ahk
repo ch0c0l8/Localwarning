@@ -9,6 +9,9 @@ IniRead, Delay, data.ini, SetValue, delay
 IniRead, WA, data.ini, SetValue, WA
 IniRead, UI90, data.ini, SetValue, UI90
 
+IniRead, DroneHalfHP, data.ini, SetValue, DroneHalfHP
+IniRead, NPCisDead, data.ini, SetValue, NPCisDead
+
 IniRead, Alliance, data.ini, Friendly, Alliance
 IniRead, Corporation, data.ini, Friendly, Corporation
 IniRead, ExcellentStanding, data.ini, Friendly, ExcellentStanding
@@ -29,19 +32,6 @@ IniRead, Suspect, data.ini, Hostiles, Suspect
 IniRead, TerribleStanding, data.ini, Hostiles, TerribleStanding
 IniRead, War, data.ini, Hostiles, War
 
-IniRead, Drone, data.ini, NPC, Drone
-IniRead, Sentry_drone, data.ini, NPC, Sentry_drone
-IniRead, Fighter, data.ini, NPC, Fighter
-IniRead, Capsule, data.ini, NPC, Capsule
-IniRead, Shuttle, data.ini, NPC, Shuttle
-IniRead, Rookie, data.ini, NPC, Rookie
-IniRead, Mining_frigate, data.ini, NPC, Mining_frigate
-IniRead, Mining_barge, data.ini, NPC, Mining_barge
-IniRead, Industrial, data.ini, NPC, Industrial
-IniRead, Industrial_command, data.ini, NPC, Industrial_command
-IniRead, Industrial_capital, data.ini, NPC, Industrial_capital
-IniRead, Sentry, data.ini, NPC, Sentry
-
 IniRead, Frigate, data.ini, NPC, Frigate
 IniRead, Destroyer, data.ini, NPC, Destroyer
 IniRead, Cruiser, data.ini, NPC, Cruiser
@@ -51,3 +41,4 @@ IniRead, Dreadnought, data.ini, NPC, Dreadnought
 IniRead, Carrier, data.ini, NPC, Carrier
 IniRead, Supercarrier, data.ini, NPC, Supercarrier
 IniRead, Titan, data.ini, NPC, Titan
+IniRead, Sentry, data.ini, NPC, Sentry
