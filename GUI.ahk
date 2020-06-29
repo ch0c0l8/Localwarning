@@ -17,7 +17,7 @@ Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, Second Y
 Gui, Add, Edit, xp+80 yp w30 h20 vSY Number Limit4 +Center, %SY%
 Gui, Add, Text, x12 y140 w230 h20 +Center, Made by Odunen Yatolila
 Gui, Tab, 2
-Gui, Add, Checkbox, x20 y30 gUI90 vUI90 checked%UI90%, UI Scaling 90`%
+Gui, Add, Checkbox, x20 y30 vUI90 checked%UI90%, UI Scaling 90`%
 Gui, Add, Checkbox, xp yp+20 vWA checked%WA%, WinActivate
 Gui, Add, Checkbox, xp yp+20 vDroneHalfHP checked%DroneHalfHP%, Drone Half HP
 Gui, Add, Checkbox, xp yp+20 vNPCisDead checked%NPCisDead%, Check NPC Dead
@@ -66,20 +66,12 @@ Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_destroyer.png
 Gui, Add, Checkbox, xp+15 yp vDestroyer checked%Destroyer%, Destroyer
 Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_cruiser.png
 Gui, Add, Checkbox, xp+15 yp vCruiser checked%Cruiser%, Cruiser
-Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_battlecruiser.png
+Gui, Add, Picture, x150 y30 w12 h12, image/NPC/Icon_red_battlecruiser.png
 Gui, Add, Checkbox, xp+15 yp vBattlecruiser checked%Battlecruiser%, Battlecruiser
 Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_battleship.png
 Gui, Add, Checkbox, xp+15 yp vBattleship checked%Battleship%, Battleship
-Gui, Add, Picture, x150 y30 w12 h12, image/NPC/Icon_red_dreadnought.png
+Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_dreadnought.png
 Gui, Add, Checkbox, xp+15 yp vDreadnought checked%Dreadnought%, Dreadnought
-Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_carrier.png
-Gui, Add, Checkbox, xp+15 yp vCarrier checked%Carrier%, Carrier
-Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_supercarrier.png
-Gui, Add, Checkbox, xp+15 yp vSupercarrier checked%Supercarrier%, Supercarrier
-Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_titan.png
-Gui, Add, Checkbox, xp+15 yp vTitan checked%Titan%, Titan
-Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_tower.png
-Gui, Add, Checkbox, xp+15 yp vSentry checked%Sentry%, Sentry
 Gui, Tab
 Gui, Add, Button, x20 y160 w230 h20 vSMP gSMP +Center, Set Mouse Position
 Gui, Add, Button, xp yp+20 w230 h20 gStart vstart +Center, Start
@@ -88,114 +80,54 @@ Gui, Add, Button, xp yp+20 w230 h20 gExitApp +Center, Exit App
 
 GuiControl, hide, stop
 
-;UI 스케일링 90% 사용시 NPC 탭 비활성화
-if UI90
-{
-	GuiControl, Disabled, Frigate
-	GuiControl, Disabled, Destroyer
-	GuiControl, Disabled, Cruiser
-	GuiControl, Disabled, Battlecruiser
-	GuiControl, Disabled, Battleship
-	GuiControl, Disabled, Dreadnought
-	GuiControl, Disabled, Carrier
-	GuiControl, Disabled, Supercarrier
-	GuiControl, Disabled, Titan
-	GuiControl, Disabled, Sentry
-}
-
-; UI 스케일링 100% 사용시 NPC 탭 활성화
-if !UI90
-{
-	GuiControl, Enabled, Frigate
-	GuiControl, Enabled, Frigate
-	GuiControl, Enabled, Destroyer
-	GuiControl, Enabled, Cruiser
-	GuiControl, Enabled, Battlecruiser
-	GuiControl, Enabled, Battleship
-	GuiControl, Enabled, Dreadnought
-	GuiControl, Enabled, Carrier
-	GuiControl, Enabled, Supercarrier
-	GuiControl, Enabled, Titan
-	GuiControl, Enabled, Sentry
-}
-
 ; 트레이 메뉴
+
 Menu, Tray, NoStandard
+Menu, Tray, Add, %name%, ShowGUI
+Menu, Tray, Add
 Menu, Tray, Add, Show GUI, ShowGUI
-Menu, Tray, Default, Show GUI
 Menu, Tray, Add, Start, Start
 Menu, Tray, Add, Stop, Stop
+Menu, Tray, Add
 Menu, Tray, Add, Exit App, ExitApp
 
-Menu, Tray, Disable, Stop
+OnMessage(0x404,"AHK_NotifyTrayIcon")
 return
+
+AHK_NotifyTrayIcon(wParam, lParam)
+{
+	If (lparam = 517)
+	{
+		Gosub, ChangeMenu
+	}
+
+}
+Return
+
+ChangeMenu:
+{
+	Menu, Tray, NoStandard
+	Menu, Tray, DeleteAll
+	Menu, Tray, Add, %name%, Return
+	Menu, Tray, Add
+	Menu, Tray, Add, Show GUI, ShowGUI
+	Menu, Tray, Add, Start, Start
+	Menu, Tray, Add, Stop, Stop
+	Menu, Tray, Add
+	Menu, Tray, Add, Exit App, ExitApp
+
+	Menu, Tray, Disable, Stop
+}
+return
+
+Return:
+{
+	return
+}
 
 ShowGUI:
 {
 	Gui, Show
-}
-return
-
-; UI 스케일링 90% 체크했을 때 NPC 탭 비활성화
-UI90:
-{
-	UI90 := !UI90
-	IniWrite, %UI90%, data.ini, SetValue, UI90
-	IniRead, UI90, data.ini, SetValue, UI90
-
-	If UI90
-	{
-		#IncludeAgain GUIDisabled.ahk
-		MsgBox, 4, Local Warning, If enable this, NPC tab is disabled`nDo you still want to use it?
-		#IncludeAgain GUIEnabled.ahk
-		IfMsgBox, No
-		{
-			UI90 := !UI90
-			GuiControl, , UI90, 0
-			GuiControl, Enabled, Frigate
-			GuiControl, Enabled, Frigate
-			GuiControl, Enabled, Destroyer
-			GuiControl, Enabled, Cruiser
-			GuiControl, Enabled, Battlecruiser
-			GuiControl, Enabled, Battleship
-			GuiControl, Enabled, Dreadnought
-			GuiControl, Enabled, Carrier
-			GuiControl, Enabled, Supercarrier
-			GuiControl, Enabled, Titan
-			GuiControl, Enabled, Sentry
-		}
-		IfMsgBox, Yes
-		{
-			if UI90
-			{
-				GuiControl, Disabled, Frigate
-				GuiControl, Disabled, Destroyer
-				GuiControl, Disabled, Cruiser
-				GuiControl, Disabled, Battlecruiser
-				GuiControl, Disabled, Battleship
-				GuiControl, Disabled, Dreadnought
-				GuiControl, Disabled, Carrier
-				GuiControl, Disabled, Supercarrier
-				GuiControl, Disabled, Titan
-				GuiControl, Disabled, Sentry
-			}
-		}
-	}
-	If !UI90
-	{
-		GuiControl, Enabled, Frigate
-		GuiControl, Enabled, Frigate
-		GuiControl, Enabled, Destroyer
-		GuiControl, Enabled, Cruiser
-		GuiControl, Enabled, Battlecruiser
-		GuiControl, Enabled, Battleship
-		GuiControl, Enabled, Dreadnought
-		GuiControl, Enabled, Carrier
-		GuiControl, Enabled, Supercarrier
-		GuiControl, Enabled, Titan
-		GuiControl, Enabled, Sentry
-	}
-	IniWrite, %UI90%, data.ini, SetValue, UI90
 }
 return
 

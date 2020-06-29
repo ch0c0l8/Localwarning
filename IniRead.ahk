@@ -38,7 +38,3 @@ IniRead, Cruiser, data.ini, NPC, Cruiser
 IniRead, Battlecruiser, data.ini, NPC, Battlecruiser
 IniRead, Battleship, data.ini, NPC, Battleship
 IniRead, Dreadnought, data.ini, NPC, Dreadnought
-IniRead, Carrier, data.ini, NPC, Carrier
-IniRead, Supercarrier, data.ini, NPC, Supercarrier
-IniRead, Titan, data.ini, NPC, Titan
-IniRead, Sentry, data.ini, NPC, Sentry

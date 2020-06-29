@@ -33,25 +33,9 @@ GuiControl, Disabled, Suspect
 GuiControl, Disabled, TerribleStanding
 GuiControl, Disabled, War
 
-GuiControl, Disabled, Drone
-GuiControl, Disabled, Sentry_drone
-GuiControl, Disabled, Fighter
-GuiControl, Disabled, Capsule
-GuiControl, Disabled, Shuttle
-GuiControl, Disabled, Rookie
-GuiControl, Disabled, Mining_frigate
-GuiControl, Disabled, Mining_barge
-GuiControl, Disabled, Industrial
-GuiControl, Disabled, Industrial_command
-GuiControl, Disabled, Industrial_capital
-GuiControl, Disabled, Sentry
-
 GuiControl, Disabled, Frigate
 GuiControl, Disabled, Destroyer
 GuiControl, Disabled, Cruiser
 GuiControl, Disabled, Battlecruiser
 GuiControl, Disabled, Battleship
 GuiControl, Disabled, Dreadnought
-GuiControl, Disabled, Carrier
-GuiControl, Disabled, Supercarrier
-GuiControl, Disabled, Titan

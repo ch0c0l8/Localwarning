@@ -38,7 +38,3 @@ IniWrite, %Cruiser%, data.ini, NPC, Cruiser
 IniWrite, %Battlecruiser%, data.ini, NPC, Battlecruiser
 IniWrite, %Battleship%, data.ini, NPC, Battleship
 IniWrite, %Dreadnought%, data.ini, NPC, Dreadnought
-IniWrite, %Carrier%, data.ini, NPC, Carrier
-IniWrite, %Supercarrier%, data.ini, NPC, Supercarrier
-IniWrite, %Titan%, data.ini, NPC, Titan
-IniWrite, %Sentry%, data.ini, NPC, Sentry

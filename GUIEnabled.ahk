@@ -33,18 +33,9 @@ GuiControl, Enabled, Suspect
 GuiControl, Enabled, TerribleStanding
 GuiControl, Enabled, War
 
-; UI 스케일링 90% 사용시 무시
-if !UI90
-{
-	GuiControl, Enabled, Frigate
-	GuiControl, Enabled, Frigate
-	GuiControl, Enabled, Destroyer
-	GuiControl, Enabled, Cruiser
-	GuiControl, Enabled, Battlecruiser
-	GuiControl, Enabled, Battleship
-	GuiControl, Enabled, Dreadnought
-	GuiControl, Enabled, Carrier
-	GuiControl, Enabled, Supercarrier
-	GuiControl, Enabled, Titan
-	GuiControl, Enabled, Sentry
-}
+GuiControl, Enabled, Frigate
+GuiControl, Enabled, Destroyer
+GuiControl, Enabled, Cruiser
+GuiControl, Enabled, Battlecruiser
+GuiControl, Enabled, Battleship
+GuiControl, Enabled, Dreadnought

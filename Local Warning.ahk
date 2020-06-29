@@ -43,7 +43,7 @@ start:
 	}
 
 	; 체크박스에 아무것도 체크하지 않았을 경우 이미지 서치 시작 불가능
-	if !(Alliance && Corporation || ExcellentStanding || Fleet || GoodStanding || MilitiaAlly || AvailableKillRight || BadStanding || Bounty || Criminal || LimitedEngagement || MilitiaWar || Neutral || Outlaw || SecurityStatusBelowZero || Suspect || TerribleStanding || War || Sentry || Frigate || Destroyer || Cruiser || Battlecruiser || Battleship || Dreadnought || Carrier || Supercarrier || Titan)
+	if !(Alliance && Corporation || ExcellentStanding || Fleet || GoodStanding || MilitiaAlly || AvailableKillRight || BadStanding || Bounty || Criminal || LimitedEngagement || MilitiaWar || Neutral || Outlaw || SecurityStatusBelowZero || Suspect || TerribleStanding || War || Frigate || Destroyer || Cruiser || Battlecruiser || Battleship || Dreadnought)
 	{
 		TrayTip, Local Warning, Please check at least one check box, 1, 3
 		goto stop
@@ -75,6 +75,13 @@ start:
 		pSuspect := Gdip_CreateBitmapFromFile("image/Hostiles90/Suspect.png")
 		pTerribleStanding := Gdip_CreateBitmapFromFile("image/Hostiles90/TerribleStanding.png")
 		pWar := Gdip_CreateBitmapFromFile("image/Hostiles90/War.png")
+
+		pFrigate := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_frigate.png")
+		pDestroyer := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_destroyer.png")
+		pCruiser := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_cruiser.png")
+		pBattlecruiser := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_battlecruiser.png")
+		pBattleship := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_battleship.png")
+		pDreadnought := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_dreadnought.png")
 
 		pDroneHalfHP := Gdip_CreateBitmapFromFile("image/DroneHalfHP.png")
 	}
@@ -109,10 +116,6 @@ start:
 		pBattlecruiser := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_battlecruiser.png")
 		pBattleship := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_battleship.png")
 		pDreadnought := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_dreadnought.png")
-		pCarrier := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_carrier.png")
-		pSupercarrier := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_supercarrier.png")
-		pTitan := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_titan.png")
-		pSentry := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_tower.png")
 
 		pDroneHalfHP := Gdip_CreateBitmapFromFile("image/DroneHalfHP.png")
 	}
@@ -153,10 +156,6 @@ start:
 			Gdip_DisposeImage(pBattlecruiser)
 			Gdip_DisposeImage(pBattleship)
 			Gdip_DisposeImage(pDreadnought)
-			Gdip_DisposeImage(pCarrier)
-			Gdip_DisposeImage(pSupercarrier)
-			Gdip_DisposeImage(pTitan)
-			Gdip_DisposeImage(pSentry)
 
 			Gdip_DisposeImage(pDroneHalfHP)
 			
@@ -222,134 +221,85 @@ start:
 			vTerribleStanding := Gdip_ImageSearch(pScreen, pTerribleStanding, , FX, FY, SX, SY, 25)
 		if War
 			vWar := Gdip_ImageSearch(pScreen, pWar, , FX, FY, SX, SY, 25)
-		; UI 스케일링 90% 사용하면 무시
-		if !UI90
+		; NPC
+		if Frigate
 		{
-			; NPC
-			if Frigate
+			if NPCisDead
 			{
-				if NPCisDead
-				{
-					dFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
-				}
+				dFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
 			}
-			if Destroyer
+			else
 			{
-				if NPCisDead
-				{
-					dDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vDestroyer := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
-				}
+				vFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, 25)
 			}
-			if Cruiser
+		}
+		if Destroyer
+		{
+			if NPCisDead
 			{
-				if NPCisDead
-				{
-					dCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
-				}
+				dDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 25)
 			}
-			if Battlecruiser
+			else
 			{
-				if NPCisDead
-				{
-					dBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
-				}
+				vDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, 25)
 			}
-			if Battleship
+		}
+		if Cruiser
+		{
+			if NPCisDead
 			{
-				if NPCisDead
-				{
-					dBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
-				}
+				dCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
 			}
-			if Dreadnought
+			else
 			{
-				if NPCisDead
-				{
-					dDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
-				}
+				vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, 25)
 			}
-			if Carrier
+		}
+		if Battlecruiser
+		{
+			if NPCisDead
 			{
-				if NPCisDead
-				{
-					dCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vCarrier := Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, 25)
-				}
+				dBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
 			}
-			if Supercarrier
+			else
 			{
-				if NPCisDead
-				{
-					dSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vSupercarrier := Gdip_ImageSearch(pScreen, pSupercarrier, , FX, FY, SX, SY, 25)
-				}
+				vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, 25)
 			}
-			if Titan
+		}
+		if Battleship
+		{
+			if NPCisDead
 			{
-				if NPCisDead
-				{
-					dTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vTitan := Gdip_ImageSearch(pScreen, pTitan, , FX, FY, SX, SY, 25)
-				}
+				dBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
 			}
-			if Sentry
+			else
 			{
-				if NPCisDead
-				{
-					dSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 25)
-				}
-				else
-				{
-					vSentry := Gdip_ImageSearch(pScreen, pSentry, , FX, FY, SX, SY, 25)
-				}
+				vBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, 25)
+			}
+		}
+		if Dreadnought
+		{
+			if NPCisDead
+			{
+				dDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
+			}
+			else
+			{
+				vDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, 25)
 			}
 		}
 
 		; FindImage 이전 값 대입
 		FindImageBefore := FindImage
-
 		; 서치된 이미지가 하나라도 있으면 FindImage 변수에 대입
 		if UI90
 		{
-			FindImage := vAlliance || vCorporation || vExcellentStanding || vFleet || vGoodStanding || vMilitiaAlly || vAvailableKillRight || vBadStanding || vBounty || vCriminal || vLimitedEngagement || vMilitiaWar || vNeutral || vOutlaw || vSecurityStatusBelowZero || vSuspect || vTerribleStanding || vWar
+			FindImage := vAlliance || vCorporation || vExcellentStanding || vFleet || vGoodStanding || vMilitiaAlly || vAvailableKillRight || vBadStanding || vBounty || vCriminal || vLimitedEngagement || vMilitiaWar || vNeutral || vOutlaw || vSecurityStatusBelowZero || vSuspect || vTerribleStanding || vWar || vFrigate || vDestroyer || vCruiser || vBattlecruiser || vBattleship || vDreadnought
 		}
 
 		if !UI90
 		{
-			FindImage := vAlliance || vCorporation || vExcellentStanding || vFleet || vGoodStanding || vMilitiaAlly || vAvailableKillRight || vBadStanding || vBounty || vCriminal || vLimitedEngagement || vMilitiaWar || vNeutral || vOutlaw || vSecurityStatusBelowZero || vSuspect || vTerribleStanding || vWar || vSentry || vFrigate || vDestroyer || vCruiser || vBattlecruiser || vBattleship || vDreadnought || vCarrier || vSupercarrier || vTitan
+			FindImage := vAlliance || vCorporation || vExcellentStanding || vFleet || vGoodStanding || vMilitiaAlly || vAvailableKillRight || vBadStanding || vBounty || vCriminal || vLimitedEngagement || vMilitiaWar || vNeutral || vOutlaw || vSecurityStatusBelowZero || vSuspect || vTerribleStanding || vWar || vFrigate || vDestroyer || vCruiser || vBattlecruiser || vBattleship || vDreadnought
 		}
 		; 로컬경보기가 작동하면 사운드 플레이
 		if FindImage
@@ -362,11 +312,12 @@ start:
 			}
 			sleep, %delay%
 		}
-		; 로컬경보기가 작동하지 않으면 사운드 플레이 (드론체력절반)
+		; 로컬경보기가 작동하지 않으면 사운드 플레이
 		if !FindImage
 		{
+			; NPC 체크
 			CheckNPCDeadBefore := CheckNPCDead
-			CheckNPCDead := dFrigate || dDestroyer || dCruiser || dBattlecruiser || dBattleship || dDreadnought || dCarrier || dSupercarrier || dTitan || dSentry
+			CheckNPCDead := dFrigate || dDestroyer || dCruiser || dBattlecruiser || dBattleship || dDreadnought
 			if NPCisDead && !CheckNPCDead
 			{
 				SoundPlay, sound/NPC's_dead.mp3, 1
@@ -375,6 +326,7 @@ start:
 					WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 				}
 			}
+			; 드론 HP 절반 알림
 			if vDroneHalfHP && DroneHalfHP
 			{
 				SoundPlay, sound/Drone_HP_is_half.mp3, 1
@@ -412,10 +364,6 @@ start:
 		vBattlecruiser := 0
 		vBattleship := 0
 		vDreadnought := 0
-		vCarrier := 0
-		vSupercarrier := 0
-		vTitan := 0
-		vSentry := 0
 	}
 }
 return
