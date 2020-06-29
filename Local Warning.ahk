@@ -49,6 +49,17 @@ start:
 		goto stop
 	}
 
+	; 잘못된 좌표 입력 시 시작 불가능
+	if (-1 > ScreenWidthBefore) or (-1 > ScreenHeightBefore) or (FX > SX) or (FY > SY) or (SX >= ScreenWidthBefore) or (SY >= ScreenHeightBefore)
+	{
+		TrayTip, Local Warning, Wrong range Set again, 1, 3
+		GuiControl,,FX, 0
+		GuiControl,,FY, 0
+		GuiControl,,SX, %ScreenWidth%
+		GuiControl,,SY, %ScreenHeight%
+		goto stop
+	}
+
 	; Gdip 시작
 	pToken := Gdip_Startup()
 

@@ -165,7 +165,7 @@ SMP:
 		; 첫번째 좌표 클릭 설정
 		KeyWait, Lbutton, D
 		MouseGetPos, posx1, posy1
-		if (-1 > posx1) and (-1 > posy1)
+		if (-1 > posx1) or (-1 > posy1)
 		{
 			msgbox, 16, Local Warning, Wrong range Set again
 			GuiControl,,FX, 0
@@ -180,7 +180,7 @@ SMP:
 		; 두번째 좌표 클릭 설정
 		KeyWait, Lbutton, D
 		MouseGetPos, posx2, posy2
-		if (posx1 > posx2) or (posy1 > posy2) or (posx2 > ScreenWidth) or (posy2 > ScreenHeight)
+		if (posx1 > posx2) or (posy1 > posy2) or (posx2 >= ScreenWidth) or (posy2 >= ScreenHeight)
 		{
 			msgbox, 16, Local Warning, Wrong range Set again
 			GuiControl,,FX, 0
