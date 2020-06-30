@@ -25,7 +25,6 @@ start:
 	; 기본 값 넣기
 	#IncludeAgain IniRead.ahk
 	Title := "EVE - " . name
-	FindImage := 0
 	WinGetPos, , , ScreenWidthBefore, ScreenHeightBefore, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 
 	; 이브온라인 핸들을 찾지 못하면 이미지 서치 시작 불가능
@@ -55,8 +54,8 @@ start:
 		TrayTip, Local Warning, Wrong range Set again, 1, 3
 		GuiControl,,FX, 0
 		GuiControl,,FY, 0
-		GuiControl,,SX, %ScreenWidth%
-		GuiControl,,SY, %ScreenHeight%
+		GuiControl,,SX, 0
+		GuiControl,,SY, 0
 		goto stop
 	}
 
@@ -328,10 +327,11 @@ start:
 		{
 			; NPC 체크
 			CheckNPCDeadBefore := CheckNPCDead
-			CheckNPCDead := dFrigate || dDestroyer || dCruiser || dBattlecruiser || dBattleship || dDreadnought
-			if NPCisDead && !CheckNPCDead
+			CheckNPCDead := !(dFrigate || dDestroyer || dCruiser || dBattlecruiser || dBattleship || dDreadnought)
+			if CheckNPCDead && NPCisDead
 			{
 				SoundPlay, sound/NPC's_dead.mp3, 1
+				; 이전값과 같지 않고 WinActive 체크가 되있으면 화면을 불러온다
 				if !(CheckNPCDeadBefore = CheckNPCDead) && WA
 				{
 					WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen

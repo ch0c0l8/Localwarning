@@ -1,5 +1,5 @@
 #NoEnv
-#SingleInstance force
+#SingleInstance OFF
 ; GUI 
 Gui, Show, x720 y400 w270 h230, Local Warning
 Gui, Add, Tab, x0 y0 w270 h230 , Main|Options|Friendly|Hostile|NPC
@@ -83,13 +83,15 @@ GuiControl, hide, stop
 ; 트레이 메뉴
 
 Menu, Tray, NoStandard
-Menu, Tray, Add, %name%, ShowGUI
+Menu, Tray, Add, %name%, Return
 Menu, Tray, Add
 Menu, Tray, Add, Show GUI, ShowGUI
 Menu, Tray, Add, Start, Start
 Menu, Tray, Add, Stop, Stop
 Menu, Tray, Add
 Menu, Tray, Add, Exit App, ExitApp
+
+Menu, Tray, Disable, Stop
 
 OnMessage(0x404,"AHK_NotifyTrayIcon")
 return
@@ -113,10 +115,18 @@ ChangeMenu:
 	Menu, Tray, Add, Show GUI, ShowGUI
 	Menu, Tray, Add, Start, Start
 	Menu, Tray, Add, Stop, Stop
+	if running
+	{
+		Menu, Tray, Disable, Start
+		Menu, Tray, Enable, Stop
+	}
+	if not running
+	{
+		Menu, Tray, Enable, Start
+		Menu, Tray, Disable, Stop
+	}
 	Menu, Tray, Add
 	Menu, Tray, Add, Exit App, ExitApp
-
-	Menu, Tray, Disable, Stop
 }
 return
 
@@ -170,8 +180,8 @@ SMP:
 			msgbox, 16, Local Warning, Wrong range Set again
 			GuiControl,,FX, 0
 			GuiControl,,FY, 0
-			GuiControl,,SX, %ScreenWidth%
-			GuiControl,,SY, %ScreenHeight%
+			GuiControl,,SX, 0
+			GuiControl,,SY, 0
 			goto stop
 		}
 		GuiControl,,FX, %posx1%
@@ -185,8 +195,8 @@ SMP:
 			msgbox, 16, Local Warning, Wrong range Set again
 			GuiControl,,FX, 0
 			GuiControl,,FY, 0
-			GuiControl,,SX, %ScreenWidth%
-			GuiControl,,SY, %ScreenHeight%
+			GuiControl,,SX, 0
+			GuiControl,,SY, 0
 			goto stop
 		}
 		GuiControl,,SX, %posx2%
