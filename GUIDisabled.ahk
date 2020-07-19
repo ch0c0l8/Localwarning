@@ -4,6 +4,7 @@ GuiControl, Disabled, SX
 GuiControl, Disabled, SY
 GuiControl, Disabled, Name
 GuiControl, Disabled, Delay
+GuiControl, Disabled, Variation
 GuiControl, Disabled, WA
 GuiControl, Disabled, UI90
 GuiControl, Disabled, SMP
@@ -39,3 +40,4 @@ GuiControl, Disabled, Cruiser
 GuiControl, Disabled, Battlecruiser
 GuiControl, Disabled, Battleship
 GuiControl, Disabled, Dreadnought
+GuiControl, Disabled, Carrier

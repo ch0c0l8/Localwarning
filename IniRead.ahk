@@ -6,6 +6,7 @@ IniRead, SX, data.ini, Coordinate, SX
 IniRead, SY, data.ini, Coordinate, SY
 
 IniRead, Delay, data.ini, SetValue, delay
+IniRead, Variation, data.ini, SetValue, Variation
 IniRead, WA, data.ini, SetValue, WA
 IniRead, UI90, data.ini, SetValue, UI90
 
@@ -38,3 +39,4 @@ IniRead, Cruiser, data.ini, NPC, Cruiser
 IniRead, Battlecruiser, data.ini, NPC, Battlecruiser
 IniRead, Battleship, data.ini, NPC, Battleship
 IniRead, Dreadnought, data.ini, NPC, Dreadnought
+IniRead, Carrier, data.ini, NPC, Carrier

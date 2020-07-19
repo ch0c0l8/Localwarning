@@ -6,6 +6,7 @@ IniWrite, %SX%, data.ini, Coordinate, SX
 IniWrite, %SY%, data.ini, Coordinate, SY
 
 IniWrite, %Delay%, data.ini, SetValue, delay
+IniWrite, %Variation%, data.ini, SetValue, Variation
 IniWrite, %WA%, data.ini, SetValue, WA
 IniWrite, %UI90%, data.ini, SetValue, UI90
 
@@ -38,3 +39,4 @@ IniWrite, %Cruiser%, data.ini, NPC, Cruiser
 IniWrite, %Battlecruiser%, data.ini, NPC, Battlecruiser
 IniWrite, %Battleship%, data.ini, NPC, Battleship
 IniWrite, %Dreadnought%, data.ini, NPC, Dreadnought
+IniWrite, %Carrier%, data.ini, NPC, Carrier

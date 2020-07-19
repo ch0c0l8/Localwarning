@@ -7,6 +7,8 @@ Gui, Tab, 1
 Gui, Add, Edit, xp+20 yp+30 w110 h20 vName Limit40 +Center, %name%
 Gui, Add, Text, xp yp+25 w70 h20 +Center, Delay(ms)
 Gui, Add, Edit, xp+80 yp w30 h20 vDelay Number Limit4 +Center, %Delay%
+Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, Variation
+Gui, Add, Edit, xp+80 yp w30 h20 gVariationCheck vVariation Number Limit3 +Center, %Variation%
 Gui, Add, Text, x130 y30 w70 h20 +Center, First X
 Gui, Add, Edit, xp+80 yp w30 h20 vFX Number Limit4 +Center, %FX%
 Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, First Y
@@ -66,12 +68,14 @@ Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_destroyer.png
 Gui, Add, Checkbox, xp+15 yp vDestroyer checked%Destroyer%, Destroyer
 Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_cruiser.png
 Gui, Add, Checkbox, xp+15 yp vCruiser checked%Cruiser%, Cruiser
-Gui, Add, Picture, x150 y30 w12 h12, image/NPC/Icon_red_battlecruiser.png
+Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_battlecruiser.png
 Gui, Add, Checkbox, xp+15 yp vBattlecruiser checked%Battlecruiser%, Battlecruiser
-Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_battleship.png
+Gui, Add, Picture, x150 y30 w12 h12, image/NPC/Icon_red_battleship.png
 Gui, Add, Checkbox, xp+15 yp vBattleship checked%Battleship%, Battleship
 Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_dreadnought.png
 Gui, Add, Checkbox, xp+15 yp vDreadnought checked%Dreadnought%, Dreadnought
+Gui, Add, Picture, xp-15 yp+20 w12 h12, image/NPC/Icon_red_carrier.png
+Gui, Add, Checkbox, xp+15 yp vCarrier checked%Carrier%, Carrier
 Gui, Tab
 Gui, Add, Button, x20 y160 w230 h20 vSMP gSMP +Center, Set Mouse Position
 Gui, Add, Button, xp yp+20 w230 h20 gStart vstart +Center, Start
@@ -141,6 +145,19 @@ ShowGUI:
 }
 return
 
+; 편차값 255를 초과했을경우 기본값으로 되돌림
+VariationCheck:
+{
+	Gui, Submit, NoHide
+	if Variation>255
+	{
+		GuiControl,,Variation, 30
+		TrayTip, Local Warning, You have exceeded the allowed Value(0~255), 1, 3
+	}
+
+}
+return
+
 ; 마우스 간편 좌표 설정
 SMP:
 {
@@ -154,7 +171,7 @@ SMP:
 	Title := "EVE - " . name
 
 	; 캐릭터명에 입력을 안했을 경우 뜨는 트레이팁
-	if (Name = "")
+	if Name = ""
 	{
 		TrayTip, Local Warning, Please enter a character name, 1, 3
 		goto stop
@@ -177,7 +194,7 @@ SMP:
 		MouseGetPos, posx1, posy1
 		if (-1 > posx1) or (-1 > posy1)
 		{
-			msgbox, 16, Local Warning, Wrong range Set again
+			msgbox, 16, Local Warning, Wrong range
 			GuiControl,,FX, 0
 			GuiControl,,FY, 0
 			GuiControl,,SX, 0
@@ -192,7 +209,7 @@ SMP:
 		MouseGetPos, posx2, posy2
 		if (posx1 > posx2) or (posy1 > posy2) or (posx2 >= ScreenWidth) or (posy2 >= ScreenHeight)
 		{
-			msgbox, 16, Local Warning, Wrong range Set again
+			msgbox, 16, Local Warning, Wrong range
 			GuiControl,,FX, 0
 			GuiControl,,FY, 0
 			GuiControl,,SX, 0
