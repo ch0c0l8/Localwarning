@@ -9,6 +9,8 @@ Gui, Add, Text, xp yp+25 w70 h20 +Center, Delay(ms)
 Gui, Add, Edit, xp+80 yp w30 h20 vDelay Number Limit4 +Center, %Delay%
 Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, Variation
 Gui, Add, Edit, xp+80 yp w30 h20 gVariationCheck vVariation Number Limit3 +Center, %Variation%
+Gui, Add, Text, xp-80 yp+25 w70 h25 +Center, Log Check Timer(ms)
+Gui, Add, Edit, xp+70 yp +25 w40 h20 vLogCheckTimer Number Limit5 +Center, %LogCheckTimer%
 Gui, Add, Text, x130 y30 w70 h20 +Center, First X
 Gui, Add, Edit, xp+80 yp w30 h20 vFX Number Limit4 +Center, %FX%
 Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, First Y
@@ -17,12 +19,15 @@ Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, Second X
 Gui, Add, Edit, xp+80 yp w30 h20 vSX Number Limit4 +Center, %SX%
 Gui, Add, Text, xp-80 yp+25 w70 h20 +Center, Second Y
 Gui, Add, Edit, xp+80 yp w30 h20 vSY Number Limit4 +Center, %SY%
-Gui, Add, Text, x12 y140 w230 h20 +Center, Made by Odunen Yatolila
+Gui, Add, Edit, x20 y140 w170 h20 vFolderPath, %FolderPath%
+Gui, Add, Button, xp+170 yp w60 h20 vSelectFolderPath gSelectFolderPath, ...
 Gui, Tab, 2
 Gui, Add, Checkbox, x20 y30 vUI90 checked%UI90%, UI Scaling 90`%
 Gui, Add, Checkbox, xp yp+20 vWA checked%WA%, WinActivate
 Gui, Add, Checkbox, xp yp+20 vDroneHalfHP checked%DroneHalfHP%, Drone Half HP
-Gui, Add, Checkbox, xp yp+20 vNPCisDead checked%NPCisDead%, Check NPC Dead
+Gui, Add, Checkbox, xp yp+20 vFactionNPCNotification checked%FactionNPCNotification%, Faction NPC notification
+Gui, Add, Checkbox, xp yp+20 vAFKNotification checked%AFKNotification%, AFK Notification
+Gui, Add, Checkbox, xp yp+20 vAmmoReload checked%AmmoReload%, Check Ammo Reload
 Gui, Tab, 3
 Gui, Add, Picture, x20 y30 w12 h12, image/Friendly/Fleet.gif
 Gui, Add, Checkbox, xp+15 yp vFleet checked%Fleet%, Fleet
@@ -83,9 +88,7 @@ Gui, Add, Button, xp yp w230 h20 gStop vstop +Center, Stop
 Gui, Add, Button, xp yp+20 w230 h20 gExitApp +Center, Exit App
 
 GuiControl, hide, stop
-
 ; 트레이 메뉴
-
 Menu, Tray, NoStandard
 Menu, Tray, Add, %name%, Return
 Menu, Tray, Add
@@ -142,101 +145,5 @@ Return:
 ShowGUI:
 {
 	Gui, Show
-}
-return
-
-; 편차값 255를 초과했을경우 기본값으로 되돌림
-VariationCheck:
-{
-	Gui, Submit, NoHide
-	if Variation>255
-	{
-		GuiControl,,Variation, 30
-		TrayTip, Local Warning, You have exceeded the allowed Value(0~255), 1, 3
-	}
-
-}
-return
-
-; 마우스 간편 좌표 설정
-SMP:
-{
-	gui, submit, nohide
-	CoordMode, Mouse, Client
-	#IncludeAgain GUIDisabled.ahk
-
-	; 최신 값 불러오기
-	IniWrite, %name%, data.ini, Name, name
-	IniRead, name, data.ini, Name, name
-	Title := "EVE - " . name
-
-	; 캐릭터명에 입력을 안했을 경우 뜨는 트레이팁
-	if Name = ""
-	{
-		TrayTip, Local Warning, Please enter a character name, 1, 3
-		goto stop
-	}
-
-	; 이브온라인 핸들을 찾지 못했다는 트레이팁
-	IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
-	{
-		TrayTip, Local Warning, EVE Online not detected, 1, 3
-		goto stop
-	}
-
-	; 이브온라인 핸들 찾았으면 좌표설정 시작
-	IfWinExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
-	{
-		WinGetPos, , , ScreenWidth, ScreenHeight, %Title% ahk_exe exefile.exe ahk_class triuiScreen
-		WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
-		; 첫번째 좌표 클릭 설정
-		KeyWait, Lbutton, D
-		MouseGetPos, posx1, posy1
-		if (-1 > posx1) or (-1 > posy1)
-		{
-			msgbox, 16, Local Warning, Wrong range
-			GuiControl,,FX, 0
-			GuiControl,,FY, 0
-			GuiControl,,SX, 0
-			GuiControl,,SY, 0
-			goto stop
-		}
-		GuiControl,,FX, %posx1%
-		GuiControl,,FY, %posy1%
-		sleep, 100
-		; 두번째 좌표 클릭 설정
-		KeyWait, Lbutton, D
-		MouseGetPos, posx2, posy2
-		if (posx1 > posx2) or (posy1 > posy2) or (posx2 >= ScreenWidth) or (posy2 >= ScreenHeight)
-		{
-			msgbox, 16, Local Warning, Wrong range
-			GuiControl,,FX, 0
-			GuiControl,,FY, 0
-			GuiControl,,SX, 0
-			GuiControl,,SY, 0
-			goto stop
-		}
-		GuiControl,,SX, %posx2%
-		GuiControl,,SY, %posy2%
-		#IncludeAgain IniWrite.ahk
-		msgbox, 64, Local Warning, Setting Complete
-		
-	}
-	#IncludeAgain GUIEnabled.ahk
-}
-return
-
-; 앱 종료
-ExitApp:
-{
-	ExitApp
-}
-return
-
-; GUI에서 X 버튼을 눌렀을 경우
-GuiClose:
-{
-	Gui, hide
-	TrayTip, Local Warning, Working in the background, 3, 1
 }
 return

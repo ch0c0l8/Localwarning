@@ -7,11 +7,15 @@ IniRead, SY, data.ini, Coordinate, SY
 
 IniRead, Delay, data.ini, SetValue, delay
 IniRead, Variation, data.ini, SetValue, Variation
-IniRead, WA, data.ini, SetValue, WA
-IniRead, UI90, data.ini, SetValue, UI90
+IniRead, LogCheckTimer, data.ini, SetValue, LogCheckTimer
+IniRead, FolderPath, data.ini, Setvalue, FolderPath
 
+IniRead, UI90, data.ini, SetValue, UI90
+IniRead, WA, data.ini, SetValue, WA
 IniRead, DroneHalfHP, data.ini, SetValue, DroneHalfHP
-IniRead, NPCisDead, data.ini, SetValue, NPCisDead
+IniRead, FactionNPCNotification, data.ini, SetValue, FactionNPCNotification
+IniRead, AFKNotification, data.ini, SetValue, AFKNotification
+IniRead, AmmoReload, data.ini, SetValue, AmmoReload
 
 IniRead, Alliance, data.ini, Friendly, Alliance
 IniRead, Corporation, data.ini, Friendly, Corporation

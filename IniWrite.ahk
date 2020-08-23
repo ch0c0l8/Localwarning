@@ -7,11 +7,15 @@ IniWrite, %SY%, data.ini, Coordinate, SY
 
 IniWrite, %Delay%, data.ini, SetValue, delay
 IniWrite, %Variation%, data.ini, SetValue, Variation
-IniWrite, %WA%, data.ini, SetValue, WA
-IniWrite, %UI90%, data.ini, SetValue, UI90
+IniWrite, %LogCheckTimer%, data.ini, SetValue, LogCheckTimer
+IniWrite, %FolderPath%, data.ini, Setvalue, FolderPath
 
+IniWrite, %UI90%, data.ini, SetValue, UI90
+IniWrite, %WA%, data.ini, SetValue, WA
 IniWrite, %DroneHalfHP%, data.ini, SetValue, DroneHalfHP
-IniWrite, %NPCisDead%, data.ini, SetValue, NPCisDead
+IniWrite, %FactionNPCNotification%, data.ini, SetValue, FactionNPCNotification
+IniWrite, %AFKNotification%, data.ini, SetValue, AFKNotification
+IniWrite, %AmmoReload%, data.ini, SetValue, AmmoReload
 
 IniWrite, %Alliance%, data.ini, Friendly, Alliance
 IniWrite, %Corporation%, data.ini, Friendly, Corporation

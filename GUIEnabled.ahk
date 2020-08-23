@@ -5,14 +5,19 @@ GuiControl, Enabled, SY
 GuiControl, Enabled, Name
 GuiControl, Enabled, Delay
 GuiControl, Enabled, Variation
-GuiControl, Enabled, WA
-GuiControl, Enabled, UI90
+GuiControl, Enabled, LogCheckTimer
+GuiControl, Enabled, FolderPath
+GuiControl, Enabled, SelectFolderPath
 GuiControl, Enabled, SMP
 GuiControl, Enabled, Start
 GuiControl, Enabled, ExitApp
 
+GuiControl, Enabled, UI90
+GuiControl, Enabled, WA
 GuiControl, Enabled, DroneHalfHP
-GuiControl, Enabled, NPCisDead
+GuiControl, Enabled, FactionNPCNotification
+GuiControl, Enabled, AFKNotification
+GuiControl, Enabled, AmmoReload
 
 GuiControl, Enabled, Alliance
 GuiControl, Enabled, Corporation

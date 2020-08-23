@@ -3,6 +3,111 @@
 #Include IniRead.ahk
 #Include GUI.ahk
 
+; 편차값 255를 초과했을경우 기본값으로 되돌림
+VariationCheck:
+{
+	Gui, Submit, NoHide
+	if Variation>255
+	{
+		GuiControl,,Variation, 30
+		TrayTip, Local Warning, You have exceeded the allowed Value(0~255), 1, 3
+	}
+
+}
+return
+
+; 파일 경로 설정
+SelectFolderPath:
+{
+	FileSelectFolder, Path
+	Path .= "`\*.txt"
+    GuiControl, , FolderPath, %Path%
+	IniWrite, %FolderPath%, data.ini, Setvalue, FolderPath
+}
+return
+
+; 마우스 간편 좌표 설정
+SMP:
+{
+	gui, submit, nohide
+	CoordMode, Mouse, Client
+	#IncludeAgain GUIDisabled.ahk
+
+	; 최신 값 불러오기
+	IniWrite, %name%, data.ini, Name, name
+	IniRead, name, data.ini, Name, name
+	Title := "EVE - " . name
+
+	; 캐릭터명에 입력을 안했을 경우 뜨는 트레이팁
+	if Name = ""
+	{
+		TrayTip, Local Warning, Please enter a character name, 1, 3
+		goto stop
+	}
+
+	; 이브온라인 핸들을 찾지 못했다는 트레이팁
+	IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+	{
+		TrayTip, Local Warning, EVE Online not detected, 1, 3
+		goto stop
+	}
+
+	; 이브온라인 핸들 찾았으면 좌표설정 시작
+	IfWinExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+	{
+		WinGetPos, , , ScreenWidth, ScreenHeight, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+		WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+		; 첫번째 좌표 클릭 설정
+		KeyWait, Lbutton, D
+		MouseGetPos, posx1, posy1
+		if (-1 > posx1) or (-1 > posy1)
+		{
+			msgbox, 16, Local Warning, Wrong range
+			GuiControl,,FX, 0
+			GuiControl,,FY, 0
+			GuiControl,,SX, 0
+			GuiControl,,SY, 0
+			goto stop
+		}
+		GuiControl,,FX, %posx1%
+		GuiControl,,FY, %posy1%
+		sleep, 100
+		; 두번째 좌표 클릭 설정
+		KeyWait, Lbutton, D
+		MouseGetPos, posx2, posy2
+		if (posx1 > posx2) or (posy1 > posy2) or (posx2 >= ScreenWidth) or (posy2 >= ScreenHeight)
+		{
+			msgbox, 16, Local Warning, Wrong range
+			GuiControl,,FX, 0
+			GuiControl,,FY, 0
+			GuiControl,,SX, 0
+			GuiControl,,SY, 0
+			goto stop
+		}
+		GuiControl,,SX, %posx2%
+		GuiControl,,SY, %posy2%
+		#IncludeAgain IniWrite.ahk
+		msgbox, 64, Local Warning, Setting Complete
+	}
+	#IncludeAgain GUIEnabled.ahk
+}
+return
+
+; 앱 종료
+ExitApp:
+{
+	ExitApp
+}
+return
+
+; GUI에서 X 버튼을 눌렀을 경우
+GuiClose:
+{
+	Gui, hide
+	TrayTip, Local Warning, Working in the background, 3, 1
+}
+return
+
 ; 스타트 버튼
 start:
 {
@@ -14,9 +119,9 @@ start:
 	; 데이터 저장
 	#IncludeAgain IniWrite.ahk
 	
-	; 스탑 버튼으로 변경
-	GuiControl, hide, start
-	GuiControl, show, stop
+	; 로딩 변경
+	GuiControl, Disabled, Start
+	GuiControl, , Start, Loading
 
 	; 스타트 트레이 비활성화, 스탑 트레이 활성화
 	Menu, Tray, Disable, Start
@@ -26,6 +131,43 @@ start:
 	#IncludeAgain IniRead.ahk
 	Title := "EVE - " . name
 	WinGetPos, , , ScreenWidthBefore, ScreenHeightBefore, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+
+	; 가장 최신 로그 파일 찾기
+	if FactionNPCNotification or AFKNotification
+	{
+		FileEncoding, UTF-8
+		Loop, %FolderPath%, 0
+		{
+			FileRead, OutputTextFile, %A_LoopFileLongPath%
+			RegExMatch(OutputTextFile,"Listener:\s(.*)", english)
+			RegExMatch(OutputTextFile,"청취자:\s(.*)", korean)
+			if (english1 = name) || (korean1 = name)
+			{
+				FindFile := A_LoopFileLongPath
+			}
+		}
+
+		; 로그파일 닉네임과 설정 닉네임이 일치하지않을때 실행 불가능
+		FileRead, OutputTextFile, %FindFile%
+		RegExMatch(OutputTextFile,"Listener:\s(.*)", english)
+		RegExMatch(OutputTextFile,"청취자:\s(.*)", korean)
+		Gamelogs := Gamelogs
+		IfnotInString, FindFile, %Gamelogs%
+		{
+			TrayTip, Local Warning, Please change to the correct path, 1, 3
+			goto stop
+		}
+		if (FolderPath = "") or (LogCheckTimer = "")
+		{
+			TrayTip, Local Warning, Please enter log check time and path , 1, 3
+			goto stop
+		}
+		if !((english1 = name) || (korean1 = name))
+		{
+			TrayTip, Local Warning, Please enter a correct character name, 1, 3
+			goto stop
+		}
+	}
 
 	; 이브온라인 핸들을 찾지 못하면 이미지 서치 시작 불가능
 	IfWinNotExist, %Title% ahk_exe exefile.exe ahk_class triuiScreen
@@ -75,6 +217,20 @@ start:
 		goto stop
 	}
 
+	if AFKNotification
+	{
+		SetTimer, AFKNotificationTimer, %LogCheckTimer%
+	}
+	If FactionNPCNotification
+	{
+		FactionNPCArray := ["Domination", "Dark Blood", "Dread Guristas", "True Sansha", "Shadow Serpentis", "Sentient"]
+	}
+	; 로딩 변경 종료
+	GuiControl, hide, Start
+	GuiControl, show, Stop
+	GuiControl, , Start, Start
+	GuiControl, Enabled, Start
+
 	; Gdip 시작
 	pToken := Gdip_Startup()
 
@@ -111,6 +267,8 @@ start:
 		pCarrier := Gdip_CreateBitmapFromFile("image/NPC90/Icon_red_carrier.png")
 
 		pDroneHalfHP := Gdip_CreateBitmapFromFile("image/DroneHalfHP.png")
+		p5_25 := Gdip_CreateBitmapFromFile("image/Ammo90/5_25.png")
+		p5_25eng := Gdip_CreateBitmapFromFile("image/Ammo90/5_25eng.png")
 	}
 	
 	; UI 스케일링 100% 사용
@@ -146,6 +304,8 @@ start:
 		pCarrier := Gdip_CreateBitmapFromFile("image/NPC/Icon_red_carrier.png")
 
 		pDroneHalfHP := Gdip_CreateBitmapFromFile("image/DroneHalfHP.png")
+		p5_25 := Gdip_CreateBitmapFromFile("image/Ammo/5_25.png")
+		p5_25eng := Gdip_CreateBitmapFromFile("image/Ammo/5_25eng.png")
 	}
 
 	; 이미지 서치 루프 시작
@@ -209,9 +369,6 @@ start:
 		pScreen := Gdip_BitmapFromHwnd(WinExist(Title "ahk_exe exefile.exe ahk_class triuiScreen"))
 
 		; 체크된 이미지만 서치
-		if DroneHalfHP
-			vDroneHalfHPBefore := vDroneHalfHP
-			vDroneHalfHP := Gdip_ImageSearch(pScreen, pDroneHalfHP, , FX, FY, SX, SY, Variation)
 		; Friendly 탭
 		if Alliance
 			vAlliance := Gdip_ImageSearch(pScreen, pAlliance, , FX, FY, SX, SY, Variation)
@@ -256,7 +413,6 @@ start:
 		if Destroyer
 			vDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, Variation)
 		if Cruiser
-
 			vCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, Variation)
 		if Battlecruiser
 			vBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, Variation)
@@ -286,43 +442,109 @@ start:
 		; 로컬경보기가 작동하지 않으면 옵션 사운드 플레이
 		if !FindImage
 		{
-
-			; NPC가 없을 때 알림(랫질이 끝났을때)
-			if NPCisDead
+			; 드론 HP 절반 알림
+			if DroneHalfHP
 			{
-				CheckNPCDeadBefore := CheckNPCDead
-				dFrigate := Gdip_ImageSearch(pScreen, pFrigate, , FX, FY, SX, SY, Variation)
-				dDestroyer := Gdip_ImageSearch(pScreen, pDestroyer, , FX, FY, SX, SY, Variation)
-				dCruiser := Gdip_ImageSearch(pScreen, pCruiser, , FX, FY, SX, SY, Variation)
-				dBattlecruiser := Gdip_ImageSearch(pScreen, pBattlecruiser, , FX, FY, SX, SY, Variation)
-				dBattleship := Gdip_ImageSearch(pScreen, pBattleship, , FX, FY, SX, SY, Variation)
-				dDreadnought := Gdip_ImageSearch(pScreen, pDreadnought, , FX, FY, SX, SY, Variation)
-				dCarrier :=  Gdip_ImageSearch(pScreen, pCarrier, , FX, FY, SX, SY, Variation)
-				CheckNPCDead := !(dFrigate || dDestroyer || dCruiser || dBattlecruiser || dBattleship || dDreadnought || dCarrier)
-				if CheckNPCDead
+				vDroneHalfHPBefore := vDroneHalfHP
+				vDroneHalfHP := Gdip_ImageSearch(pScreen, pDroneHalfHP, , FX, FY, SX, SY, Variation)
+				if vDroneHalfHP
 				{
-					SoundPlay, sound/NPC's_dead.mp3, 1
+					SoundPlay, sound/Drone_HP_is_half.mp3, 1
 					; 이전값과 같지 않고 WinActive 체크가 되있으면 화면을 불러온다
-					if !(CheckNPCDeadBefore = CheckNPCDead) && WA
+					if !(vDroneHalfHPBefore = vDroneHalfHP) && WA
 					{
 						WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
 					}
 				}
 			}
 
-			; 드론 HP 절반 알림
-			if vDroneHalfHP && DroneHalfHP
+			; 탄 장전 알림
+			if AmmoReload
 			{
-				SoundPlay, sound/Drone_HP_is_half.mp3, 1
-				; 이전값과 같지 않고 WinActive 체크가 되있으면 화면을 불러온다
-				if !(vDroneHalfHPBefore = vDroneHalfHP) && WA
+				v5_25Before := v5_25
+				v5_25 := Gdip_ImageSearch(pScreen, p5_25, , FX, FY, SX, SY, Variation)
+				v5_25eng := Gdip_ImageSearch(pScreen, p5_25eng, , FX, FY, SX, SY, Variation)
+				v5_25 := v5_25 || v5_25eng
+				if v5_25 && !TimerChecker
 				{
-					WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+					TimerChecker := 1
+					SetTimer, LoadingTimer5_25, 35000
 				}
 			}
-		}
 
-		; 이브온라인 스크린 이미지 데이터 삭제 및 서치 값 리셋
+			; AFK 알림
+			Critical, 50
+			if AFKNotification
+			{
+				FileEncoding, UTF-8
+				old_linesAFK := total_linesAFK
+				; 총 라인 수 읽기 & 마지막 줄 변수에 넣기
+				Loop, Read, %FindFile%
+				{
+					total_linesAFK := A_Index
+					LastLineAFK:= A_LoopReadLine
+				}
+				
+				readlineAFK := total_linesAFK - (old_linesAFK - 1) ; 읽어야하는 라인 수 
+
+				; 라인 수 만큼 읽기
+				Loop, %readlineAFK%
+				{
+					FileReadLine, TextAFK, %FindFile%, %old_linesAFK%
+					if ErrorLevel
+						break
+					old_linesAFK++
+					StackLinesAFK .= TextAFK . "`n"
+				}
+			}
+
+			; 팩션 NPC 공격 알림
+			if FactionNPCNotification
+			{
+				FileEncoding, UTF-8
+				old_linesFaction := total_linesFaction
+				; 총 라인 수 읽기 & 마지막 줄 변수에 넣기
+				Loop, Read, %FindFile%
+				{
+					total_linesFaction := A_Index
+					LastLineFaction := A_LoopReadLine
+				}
+				
+				readlineFaction := total_linesFaction - (old_linesFaction - 1) ; 읽어야하는 라인 수 
+
+				; 라인 수 만큼 읽기
+				Loop, %readlineFaction%
+				{
+					FileReadLine, TextFaction, %FindFile%, %old_linesFaction%
+					if ErrorLevel
+						break
+					old_linesFaction++
+					StackLinesFaction .= TextFaction . "`n"
+				}
+
+				; 팩션 NPC 이름 찾기
+				For index, value in FactionNPCArray
+				{
+					FactionNPCNotificationBefore := FactionNPCNotificationFind
+					IfInString, StackLinesFaction, %value%
+					{
+						FactionNPCNotificationFind := 1
+						SoundPlay, sound/FactionNPCNotification.mp3
+						StackLinesFaction := ""
+						if !(FactionNPCNotificationBefore = FactionNPCNotificationFind) && WA
+						{
+							WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+						}
+					}
+					else
+					{
+						FactionNPCNotificationFind := 0
+					}
+				}
+			}
+			Critical, Off
+		}
+		; 이미지 데이터 삭제 및 서치 값 리셋
 		Gdip_DisposeImage(pScreen)
 		vAlliance := 0
 		vCorporation := 0
@@ -357,6 +579,48 @@ return
 stop:
 {
 	running := false
+
+	; 이미지 데이터 삭제 및 서치 값 리셋
+	vAlliance := 0
+	vCorporation := 0
+	vExcellentStanding := 0
+	vFleet := 0
+	vGoodStanding := 0
+	vMilitiaAlly := 0
+	vAvailableKillRight := 0
+	vBadStanding := 0
+	vBounty := 0
+	vCriminal := 0
+	vLimitedEngagement := 0
+	vMilitiaWar := 0
+	vNeutral := 0
+	vOutlaw := 0
+	vSecurityStatusBelowZero := 0
+	vSuspect := 0
+	vTerribleStanding := 0
+	vWar := 0
+	vFrigate := 0
+	vDestroyer := 0
+	vCruiser := 0
+	vBattlecruiser := 0
+	vBattleship := 0
+	vDreadnought := 0
+	vCarrier := 0
+	SetTimer, LoadingTimer5_25, OFF
+	TimerChecker := 0
+	v5_25 := 0
+	v5_25eng := 0
+	SetTimer, AFKNotificationTimer, OFF
+	StackLinesFaction := ""
+	StackLinesAFK := ""
+
+
+	; 로딩 변경 종료
+	GuiControl, hide, Start
+	GuiControl, show, Stop
+	GuiControl, , Start, Start
+	GuiControl, Enabled, Start
+
 	; 서치 종료 시 모든 입력창 활성화
 	#IncludeAgain GUIEnabled.ahk
 	
@@ -367,5 +631,105 @@ stop:
 	; 스타트 트레이 활성화, 스탑 트레이 비활성화
 	Menu, Tray, Enable, Start
 	Menu, Tray, Disable, Stop
+}
+return
+
+LoadingTimer5_25:
+{
+	if !FindImage
+	{
+		if v5_25
+		{
+			SoundPlay, sound/Reload_complete.mp3
+			if !(v5_25Before = v5_25) && WA
+			{
+				WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+			}
+		}
+	}
+	TimerChecker := 0
+	SetTimer, LoadingTimer5_25, OFF
+}
+return
+
+AFKNotificationTimer:
+{
+	if !FindImage
+	{
+		BattleCombat := "combat"
+		BattleBounty := "bounty"
+		IfInString, LastLineAFK, %BattleCombat%
+		{
+			vBattleCombat := 1
+		}
+		IfInString, LastLineAFK, %BattleBounty%
+		{
+			vBattleBounty := 1
+		}
+		If vBattleCombat or vBattleBounty
+		{
+			; 교전 로그이나 다음 로그가 갱신되지 않음 (사이트클리어)
+			SiteClearBefore := SiteClear
+			SiteClear := (tmp = LastLineAFK)
+			if SiteClear
+			{
+				SoundPlay, sound/site_clear.mp3
+				if !(SiteClearBefore = SiteClear) && WA
+				{
+					WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+				}
+			}
+			else
+			{
+				SiteClear := 0
+			}
+
+			; 로그는 갱신중이나 드론이 때리지 않는 상황 (드론 잠수)
+			if !(tmp = LastLineAFK)
+			{
+				tmp := LastLineAFK
+				EnglishHit := ">to<"
+				EnglishMiss := "completely - "
+				KoreanHit := "입힘"
+				KoreanMiss := "을(를) 완전히 빗나감"
+				IfInString, StackLinesAFK, %EnglishHit%
+				{
+					vEnglishHit := 1
+					StackLinesAFK := ""
+				}
+				IfInString, StackLinesAFK, %EnglishMiss%
+				{
+					vEnglishMiss := 1
+					StackLinesAFK := ""
+				}
+				IfInString, StackLinesAFK, %KoreanHit%
+				{
+					vKoreanHit := 1
+					StackLinesAFK := ""
+				}
+				IfInString, StackLinesAFK, %KoreanMiss%
+				{
+					vKoreanMiss := 1
+					StackLinesAFK := ""
+				}
+				DroneFightingBefore := DroneFighting
+				DroneFighting := (vEnglishHit || vEnglishMiss || vKoreanHit || vKoreanMiss)
+				if !DroneFighting
+				{
+					SoundPlay, sound/drone_is_not_fighting.mp3
+					if !(DroneFightingBefore = DroneFighting) && WA
+					{
+						WinActivate, %Title% ahk_exe exefile.exe ahk_class triuiScreen
+					}
+				}
+			}
+		}
+	}
+	vEnglishHit := 0
+	vEnglishMiss := 0
+	vKoreanHit := 0
+	vKoreanMiss := 0
+	vBattleBounty := 0
+	vBattleCombat := 0
 }
 return
